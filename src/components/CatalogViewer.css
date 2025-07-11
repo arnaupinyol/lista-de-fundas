@@ -1,33 +1,65 @@
-/* CatalogViewer.css */
+/* src/components/CatalogViewer.css */
 .titulo-marca {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1a202c; /* un gris oscuro */
-  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2c3e50;
 }
 
-.boton-marca,
-.boton-modelo {
-  display: block;
-  margin: 20px 0;
-  padding: 12px 24px;
-  font-size: 1.25rem;
-  background-color: #3182ce;
+.titulo-funda {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.boton-marca, .boton-modelo {
+  font-size: 1.2rem;
+  padding: 12px 20px;
+  margin: 10px 0;
+  background-color: #3498db;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s ease;
 }
 
 .boton-marca:hover,
 .boton-modelo:hover {
-  background-color: #2b6cb0;
+  background-color: #2980b9;
 }
 
-.titulo-funda {
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin-top: 2rem;
+.estilo-funda {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  background: #edf2f7;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.nombre-estilo {
+  min-width: 80px;
+  font-weight: 500;
   color: #2d3748;
+}
+
+.contador-botones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.boton-guardar {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.boton-guardar:hover {
+  background-color: #2b6cb0;
 }
