@@ -1,26 +1,123 @@
-// src/data/catalog.js
+const ALL_IPHONE_CASES = [
+  "BOOK",
+  "BOOK NL",
+  "360",
+  "SILICONA",
+  "DURA",
+  "RING",
+  "ARMY",
+  "CORD",
+  "MAGSAFE",
+  "MAGSAFE NUEVA",
+  "MAGSAFE SILICONA",
+  "SOFT SILICONE (10)",
+  "FUN"
+];
+
+const ALL_SAMSUNG_CASES = [
+  "BOOK",
+  "BOOK NL",
+  "360",
+  "SILICONA",
+  "DURA",
+  "RING",
+  "ARMY",
+  "CORD",
+  "MAGSAFE",
+  "SOFT SILICONE (10)",
+  "FUN"
+];
 
 export const catalog = [
   {
-    marca: "Apple",
+    marca: "iPhone",
     modelos: [
-      {
-        nombre: "iPhone 14",
-        fundas: ["transparente", "antigolpes"]
-      },
-      {
-        nombre: "iPhone 13",
-        fundas: ["silicona"]
-      }
+      { nombre: "iPhone 7/8/SE", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 7/8 Plus", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone X/Xs", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone X/Xs Max", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone XR", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 11", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 11 Pro", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 11 Pro Max", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 12/12 Pro", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 12 mini", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 12 Pro Max", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 13/14", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 13 Pro", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 13 Pro Max", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 13 mini", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 14 Pro", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 14 Plus", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 14 Pro Max", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 15", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 15 Pro", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 15 Plus", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 15 Pro Max", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 16", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 16 Pro", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 16 Plus", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 16 Pro Max", fundas: ALL_IPHONE_CASES },
+      { nombre: "iPhone 16e", fundas: ALL_IPHONE_CASES }
     ]
   },
   {
     marca: "Samsung",
     modelos: [
-      {
-        nombre: "Galaxy S22",
-        fundas: ["cuero"]
-      }
+      { nombre: "Galaxy S25 Ultra", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S24 Ultra", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S24/S25", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S24 Plus/S25 Plus", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S24 FE", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S23 Ultra", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S23 Plus", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S23", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S23 FE", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S22 Ultra", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S22 Plus", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S22", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S21 Ultra", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S21 Plus", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S21", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S21 FE", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S20 Ultra", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S20 Plus", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S20", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy S20 FE", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A56/A36", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A55", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A54", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A53", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A52", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A51", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A50/A30s", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A41", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A40", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A35", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A34", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A33", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A32 4G", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A31", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A26", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A25/A24", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A23", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A22 5G", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A22 4G", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A21s", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A20e", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A16", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A15", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A14", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A13/A04s/A32 5G", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A12", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A10", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A06", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A05", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A05s", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A02s/A03s", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A72", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A71", fundas: ALL_SAMSUNG_CASES },
+      { nombre: "Galaxy A70", fundas: ALL_SAMSUNG_CASES }
     ]
   }
 ];

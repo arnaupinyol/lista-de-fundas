@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { catalog } from '../data/catalog';
 import { fundaDesigns } from '../data/designs';
+import './CatalogViewer.css';
 
 const CatalogViewer = () => {
   const [selectedMarca, setSelectedMarca] = useState(null);
   const [selectedModelo, setSelectedModelo] = useState(null);
 
   if (!selectedMarca) {
-    // Paso 1: Elegir marca
     return (
       <div>
-        <h1>Elige una marca de móvil</h1>
+        <h1 className="titulo-marca">Elige una marca de móvil</h1>
         {catalog.map((marcaObj) => (
           <button
             key={marcaObj.marca}
             onClick={() => setSelectedMarca(marcaObj)}
-            style={{ display: 'block', margin: '10px 0' }}
+            className="boton-marca"
           >
             {marcaObj.marca}
           </button>
@@ -25,16 +25,17 @@ const CatalogViewer = () => {
   }
 
   if (!selectedModelo) {
-    // Paso 2: Elegir modelo
     return (
       <div>
-        <button onClick={() => setSelectedMarca(null)}>← Volver</button>
-        <h2>Modelos de {selectedMarca.marca}</h2>
+        <button onClick={() => setSelectedMarca(null)} className="boton-marca">
+          ← Volver
+        </button>
+        <h2 className="titulo-marca">Modelos de {selectedMarca.marca}</h2>
         {selectedMarca.modelos.map((modelo) => (
           <button
             key={modelo.nombre}
             onClick={() => setSelectedModelo(modelo)}
-            style={{ display: 'block', margin: '10px 0' }}
+            className="boton-modelo"
           >
             {modelo.nombre}
           </button>
@@ -43,19 +44,32 @@ const CatalogViewer = () => {
     );
   }
 
-  // Paso 3: Mostrar fundas y diseños
   return (
     <div>
-      <button onClick={() => setSelectedModelo(null)}>← Volver a modelos</button>
-      <h2>Fundas para {selectedModelo.nombre}</h2>
+      <button onClick={() => setSelectedModelo(null)} className="boton-marca">
+        ← Volver a modelos
+      </button>
+      <h2 className="titulo-marca">Fundas para {selectedModelo.nombre}</h2>
       {selectedModelo.fundas.map((tipo) => (
         <div key={tipo} style={{ marginTop: '20px' }}>
-          <h3>{tipo}</h3>
-          <ul>
+          <h3 className="titulo-funda">{tipo}</h3>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             {fundaDesigns[tipo]?.map((diseño, index) => (
-              <li key={index}>{diseño}</li>
+              <span
+                key={index}
+                style={{
+                  padding: '6px 12px',
+                  backgroundColor: '#e2e8f0',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  color: '#2d3748',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}
+              >
+                {diseño}
+              </span>
             ))}
-          </ul>
+          </div>
         </div>
       ))}
     </div>

@@ -1,0 +1,33 @@
+/* CatalogViewer.css */
+.titulo-marca {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a202c; /* un gris oscuro */
+  margin-bottom: 1rem;
+}
+
+.boton-marca,
+.boton-modelo {
+  display: block;
+  margin: 20px 0;
+  padding: 12px 24px;
+  font-size: 1.25rem;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.boton-marca:hover,
+.boton-modelo:hover {
+  background-color: #2b6cb0;
+}
+
+.titulo-funda {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  color: #2d3748;
+}
