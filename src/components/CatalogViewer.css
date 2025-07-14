@@ -63,3 +63,18 @@
 .boton-guardar:hover {
   background-color: #2b6cb0;
 }
+
+.boton-exportar {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.boton-exportar:hover {
+  background-color: #45a049;
+}

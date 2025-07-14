@@ -2,8 +2,7 @@
 import React from 'react';
 import './CarreteSidebar.css';
 
-export const CarreteSidebar = ({ items }) => {
-  // Agrupar fundas iguales sumando sus cantidades
+export const CarreteSidebar = ({ items, onEliminarFunda }) => {
   const agrupado = items.reduce((acc, item) => {
     const clave = `${item.modelo}-${item.tipo}-${item.estilo || 'sin-estilo'}`;
     if (!acc[clave]) {
@@ -27,6 +26,12 @@ export const CarreteSidebar = ({ items }) => {
             <li key={index}>
               {item.modelo} – {item.tipo}
               {item.estilo && ` (${item.estilo})`} × <strong>{item.cantidad}</strong>
+              <button
+                onClick={() => onEliminarFunda(item)}
+                style={{ marginLeft: '8px', color: 'red' }}
+              >
+                Eliminar
+              </button>
             </li>
           ))}
         </ul>

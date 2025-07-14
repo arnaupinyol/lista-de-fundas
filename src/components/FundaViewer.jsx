@@ -24,7 +24,9 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
   };
 
   const handleGuardar = (tipo, estilo = 'default') => {
-    const cantidad = contadores[`${tipo}-${estilo}`] || 0;
+    const clave = `${tipo}-${estilo}`;
+    const cantidad = contadores[clave] || 0;
+
     if (cantidad > 0) {
       onGuardarFunda({
         marca: marca.marca,
@@ -33,8 +35,15 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
         estilo: estilo === 'default' ? null : estilo,
         cantidad,
       });
+
+      // Resetear el contador después de guardar
+      setContadores((prev) => ({
+        ...prev,
+        [clave]: 0,
+      }));
     }
   };
+
 
   return (
     <div>

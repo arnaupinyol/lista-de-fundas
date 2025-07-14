@@ -16,6 +16,20 @@ const CatalogViewer = () => {
     setCarrete((prev) => [...prev, item]);
   };
 
+  const eliminarDelCarrete = (itemAEliminar) => {
+    setCarrete((prev) =>
+      prev.filter(
+        (item) =>
+          !(
+            item.modelo === itemAEliminar.modelo &&
+            item.tipo === itemAEliminar.tipo &&
+            (item.estilo || 'sin-estilo') === (itemAEliminar.estilo || 'sin-estilo')
+          )
+      )
+    );
+  };
+
+
   if (!selectedMarca) {
     return (
       <MarcaSelector
@@ -47,7 +61,7 @@ const CatalogViewer = () => {
           onGuardarFunda={agregarAlCarrete}
         />
       </div>
-      <CarreteSidebar items={carrete} />
+      <CarreteSidebar items={carrete} onEliminarFunda={eliminarDelCarrete} />
     </div>
   );
 };
