@@ -21,13 +21,13 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
 
   const doc = new jsPDF();
   doc.setFontSize(16);
-  doc.text('Carrete de fundas', 20, 20);
+  doc.text('Carrito de fundas', 20, 20);
 
   let y = 30;
 
   if (Object.keys(agrupadoPorModelo).length === 0) {
     doc.setFontSize(12);
-    doc.text('El carrete está vacío.', 20, y);
+    doc.text('El carrito está vacío.', 20, y);
   } else {
     Object.entries(agrupadoPorModelo).forEach(([modelo, fundas], idxModelo) => {
       doc.setFontSize(14);
@@ -53,7 +53,8 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
     });
   }
 
-  doc.save('carrete.pdf');
+  const fecha = new Date().toISOString().slice(0, 10); //
+  doc.save(`carrito-${fecha}.pdf`);
 };
 
 
@@ -90,7 +91,7 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
         ))}
       </div>
       <button onClick={exportarPDF} className="boton-exportar">
-        📄 Exportar carrete a PDF
+        📄 Exportar carrito a PDF
       </button>
     </div>
   );

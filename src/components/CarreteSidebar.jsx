@@ -17,7 +17,7 @@ export const CarreteSidebar = ({ items, onEliminarFunda }) => {
 
   return (
     <div className="carrete-sidebar">
-      <h3>Carrete</h3>
+      <h3>Carrito</h3>
       {fundasAgrupadas.length === 0 ? (
         <p style={{ fontStyle: 'italic', color: '#555' }}>Vacío</p>
       ) : (
