@@ -1,12 +1,12 @@
 /* src/components/CatalogViewer.css */
 
 :root {
-  --color-background: #100311;
-  --color-titulo: #580092;
-  --color-boton: #580092;
-  --color-hover-boton: #3c0064;
-  --color-funda: #cd9cec;
-  --color-hover-exportar: #b98dd4;
+  --color-background: #cec7b6;
+  --color-texto: #7e7b76;
+  --color-boton: #eee9c7;
+  --color-hover-boton: #d4d0b3;
+  --color-funda: #b3c9c1;
+  --color-hover-exportar: #96a8a2;
 }
 
 
@@ -20,7 +20,7 @@ body
   font-weight: bold;
   margin-bottom: 20px;
   margin: 10px 10px;
-  color: var(--color-titulo);
+  color: var(--color-texto);
 }
 
 .titulo-funda {
@@ -28,7 +28,7 @@ body
   font-weight: 600;
   margin-bottom: 10px;
   margin: 10px 10px;
-  color: var(--color-titulo);
+  color: var(--color-texto);
 }
 
 .boton-marca, .boton-modelo {
@@ -36,7 +36,7 @@ body
   padding: 12px 20px;
   margin: 10px 10px;
   background-color: var(--color-boton);
-  color: white;
+  color: var(--color-texto);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -73,7 +73,7 @@ body
 
 .boton-guardar {
   background-color: #3182ce;
-  color: white;
+  color: var(--color-texto);
   border: none;
   padding: 4px 10px;
   border-radius: 6px;
@@ -87,7 +87,7 @@ body
 .boton-exportar {
   background-color: var(--color-funda);
   margin: 10px 10px;
-  color: white;
+  color: var(--color-texto);
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
