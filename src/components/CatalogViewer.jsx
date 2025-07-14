@@ -17,8 +17,15 @@ const CatalogViewer = () => {
   };
 
   if (!selectedMarca) {
-    return <MarcaSelector marcas={catalog} onSelectMarca={setSelectedMarca} />;
+    return (
+      <MarcaSelector
+        marcas={catalog}
+        onSelectMarca={setSelectedMarca}
+        carrete={carrete} // ✅ Esto es lo nuevo
+      />
+    );
   }
+
 
   if (!selectedModelo) {
     return (
