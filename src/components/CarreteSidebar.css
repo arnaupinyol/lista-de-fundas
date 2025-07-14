@@ -3,7 +3,7 @@
   width: 250px;
   padding: 20px;
   border-left: 2px solid #e2e8f0;
-  background-color: #f8fafc;
+  background-color: #580092;
   height: 100vh;
   overflow-y: auto;
   position: sticky;
@@ -12,7 +12,7 @@
 
 .carrete-sidebar h3 {
   margin-bottom: 10px;
-  color: #2d3748;
+  color: #ffffff;
 }
 
 .carrete-sidebar ul {

@@ -1,3 +1,6 @@
+import appleLogo from '../assets/logos/apple.png';
+import samsungLogo from '../assets/logos/samsung.png';
+
 const ALL_IPHONE_CASES = [
   "BOOK",
   "BOOK NL",
@@ -31,6 +34,7 @@ const ALL_SAMSUNG_CASES = [
 export const catalog = [
   {
     marca: "iPhone",
+    logo: appleLogo,
     modelos: [
       { nombre: "iPhone 7/8/SE", fundas: ALL_IPHONE_CASES },
       { nombre: "iPhone 7/8 Plus", fundas: ALL_IPHONE_CASES },
@@ -63,6 +67,7 @@ export const catalog = [
   },
   {
     marca: "Samsung",
+    logo: samsungLogo,
     modelos: [
       { nombre: "Galaxy S25 Ultra", fundas: ALL_SAMSUNG_CASES },
       { nombre: "Galaxy S24 Ultra", fundas: ALL_SAMSUNG_CASES },

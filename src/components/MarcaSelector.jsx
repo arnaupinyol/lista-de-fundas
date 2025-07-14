@@ -43,20 +43,38 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
   return (
     <div>
       <h1 className="titulo-marca">Elige una marca de móvil</h1>
-      <button onClick={exportarPDF} className="boton-exportar">
-        📄 Exportar carrete a PDF
-      </button>
-      <div style={{ marginTop: '16px' }}>
+      <div style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
         {marcas.map((marcaObj) => (
           <button
             key={marcaObj.marca}
             onClick={() => onSelectMarca(marcaObj)}
             className="boton-marca"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '10px',
+              width: '250px',
+              height: '250px'
+            }}
           >
-            {marcaObj.marca}
+          <img className="logo-imagen"
+            src={marcaObj.logo}
+            alt={marcaObj.marca}
+            style={{
+              width: '200px',
+              height: '200px',
+              objectFit: 'contain',
+              maxWidth: 'none',
+              maxHeight: 'none'
+            }}
+          />
           </button>
         ))}
       </div>
+      <button onClick={exportarPDF} className="boton-exportar">
+        📄 Exportar carrete a PDF
+      </button>
     </div>
   );
 };
