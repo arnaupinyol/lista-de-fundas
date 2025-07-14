@@ -5,40 +5,57 @@ import './CatalogViewer.css';
 
 export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
   const exportarPDF = () => {
-    const agrupado = carrete.reduce((acc, item) => {
-      const clave = `${item.modelo}-${item.tipo}-${item.estilo || 'sin-estilo'}`;
-      if (!acc[clave]) {
-        acc[clave] = { ...item };
-      } else {
-        acc[clave].cantidad += item.cantidad;
-      }
-      return acc;
-    }, {});
-
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text('Carrete de fundas', 20, 20);
-
-    const fundas = Object.values(agrupado);
-    let y = 30;
-
-    if (fundas.length === 0) {
-      doc.setFontSize(12);
-      doc.text('El carrete está vacío.', 20, y);
+  // Primero agrupamos por modelo, luego por tipo y estilo dentro de cada modelo
+  const agrupadoPorModelo = carrete.reduce((acc, item) => {
+    if (!acc[item.modelo]) {
+      acc[item.modelo] = {};
+    }
+    const clave = `${item.tipo}-${item.estilo || 'sin-estilo'}`;
+    if (!acc[item.modelo][clave]) {
+      acc[item.modelo][clave] = { ...item };
     } else {
-      fundas.forEach((item, idx) => {
+      acc[item.modelo][clave].cantidad += item.cantidad;
+    }
+    return acc;
+  }, {});
+
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.text('Carrete de fundas', 20, 20);
+
+  let y = 30;
+
+  if (Object.keys(agrupadoPorModelo).length === 0) {
+    doc.setFontSize(12);
+    doc.text('El carrete está vacío.', 20, y);
+  } else {
+    Object.entries(agrupadoPorModelo).forEach(([modelo, fundas], idxModelo) => {
+      doc.setFontSize(14);
+      doc.text(`Modelo: ${modelo}`, 20, y);
+      y += 10;
+
+      Object.values(fundas).forEach((item, idxFunda) => {
         const estilo = item.estilo ? ` (${item.estilo})` : '';
         doc.setFontSize(12);
         doc.text(
-          `• ${item.modelo} – ${item.tipo}${estilo} × ${item.cantidad}`,
-          20,
-          y + idx * 10
+          `• ${item.tipo}${estilo} × ${item.cantidad}`,
+          30,
+          y
         );
+        y += 10;
       });
-    }
 
-    doc.save('carrete.pdf');
-  };
+      y += 5; // Espacio entre modelos
+      if (y > 280) {
+        doc.addPage();
+        y = 20;
+      }
+    });
+  }
+
+  doc.save('carrete.pdf');
+};
+
 
   return (
     <div>
