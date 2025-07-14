@@ -54,16 +54,16 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
               alignItems: 'center',
               justifyContent: 'center',
               padding: '10px',
-              width: '250px',
-              height: '250px'
+              width: '350px',
+              height: '350px'
             }}
           >
           <img className="logo-imagen"
             src={marcaObj.logo}
             alt={marcaObj.marca}
             style={{
-              width: '200px',
-              height: '200px',
+              width: '270px',
+              height: '270px',
               objectFit: 'contain',
               maxWidth: 'none',
               maxHeight: 'none'

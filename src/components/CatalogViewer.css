@@ -1,7 +1,18 @@
 /* src/components/CatalogViewer.css */
+
+:root {
+  --color-background: #100311;
+  --color-titulo: #580092;
+  --color-boton: #580092;
+  --color-hover-boton: #3c0064;
+  --color-funda: #cd9cec;
+  --color-hover-exportar: #b98dd4;
+}
+
+
 body
 {
-  background-color: #100311;
+  background-color: var(--color-background);
 }
 
 .titulo-marca {
@@ -9,7 +20,7 @@ body
   font-weight: bold;
   margin-bottom: 20px;
   margin: 10px 10px;
-  color: #580092;
+  color: var(--color-titulo);
 }
 
 .titulo-funda {
@@ -17,14 +28,14 @@ body
   font-weight: 600;
   margin-bottom: 10px;
   margin: 10px 10px;
-  color: #580092;
+  color: var(--color-titulo);
 }
 
 .boton-marca, .boton-modelo {
   font-size: 1.2rem;
   padding: 12px 20px;
   margin: 10px 10px;
-  background-color: #580092;
+  background-color: var(--color-boton);
   color: white;
   border: none;
   border-radius: 8px;
@@ -34,7 +45,7 @@ body
 
 .boton-marca:hover,
 .boton-modelo:hover {
-  background-color: #3c0064;
+  background-color: var(--color-hover-boton);
 }
 
 .estilo-funda {
@@ -43,7 +54,7 @@ body
   gap: 12px;
   padding: 8px;
   margin: 10px 10px;
-  background: #cd9cec;
+  background: var(--color-funda);
   border-radius: 8px;
   margin-bottom: 10px;
 }
@@ -51,7 +62,7 @@ body
 .nombre-estilo {
   min-width: 80px;
   font-weight: 500;
-  color: #cd9cec;
+  color: var(--color-funda);
 }
 
 .contador-botones {
@@ -74,7 +85,7 @@ body
 }
 
 .boton-exportar {
-  background-color: #cd9cec;
+  background-color: var(--color-funda);
   margin: 10px 10px;
   color: white;
   padding: 10px 16px;
@@ -86,7 +97,7 @@ body
 }
 
 .boton-exportar:hover {
-  background-color: #b48ace;
+  background-color: var(--color-hover-exportar);
 }
 
 /* Aplica a todos los botones */
