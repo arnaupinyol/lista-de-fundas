@@ -1,5 +1,6 @@
 import appleLogo from '../assets/logos/apple.png';
 import samsungLogo from '../assets/logos/samsung.png';
+import xiaomiLogo from '../assets/logos/Xiaomi_logo.png';
 
 const ALL_IPHONE_CASES = [
   "BOOK",
@@ -27,6 +28,19 @@ const ALL_SAMSUNG_CASES = [
   "ARMY",
   "CORD",
   "MAGSAFE",
+  "SOFT SILICONE (10)",
+  "FUN"
+];
+
+const ALL_XIAOMI_CASES = [
+  "BOOK",
+  "BOOK NL",
+  "360",
+  "SILICONA",
+  "DURA",
+  "RING",
+  "ARMY",
+  "CORD",
   "SOFT SILICONE (10)",
   "FUN"
 ];
@@ -123,6 +137,52 @@ export const catalog = [
       { nombre: "Galaxy A72", fundas: ALL_SAMSUNG_CASES },
       { nombre: "Galaxy A71", fundas: ALL_SAMSUNG_CASES },
       { nombre: "Galaxy A70", fundas: ALL_SAMSUNG_CASES }
+    ]
+  },
+  {
+    marca: "Xiaomi",
+    logo: xiaomiLogo,
+    modelos: [
+      { nombre: "Rm Note 14 Pro Plus", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 14 Pro 5G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 14 Pro 4G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 14 5G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 14 4G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 13 Pro Plus", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 13 Pro 5G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 13 Pro 4G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 13 5G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 13 4G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 12 Pro 5G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 12 5G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 12 4G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 12S", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 11/11S", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 11 Pro/Rm Note 12 Pro 4G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 10/10S", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 10 Pro", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 10 5G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 9", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 9S/Pro", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 8", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 8T", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm Note 8 Pro", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 15C", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 14C", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 13C", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 13 4G", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 12C", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 12", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 10C", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 10", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 9C", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 9A", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 9", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Rm 9T/Poco M3", fundas: ALL_XIAOMI_CASES },
+      { nombre: "Poco X3", fundas: ALL_XIAOMI_CASES },
+      { nombre: "RM A5", fundas: ALL_XIAOMI_CASES },
+      { nombre: "RM A3", fundas: ALL_XIAOMI_CASES },
+      { nombre: "RM A1/A2", fundas: ALL_XIAOMI_CASES }
     ]
   }
 ];

@@ -34,5 +34,19 @@ export const fundaDesigns = {
       "red", "baby pink", "purple", "turquesa", "black", "dark green"
     ],
     FUN: []
+  },
+  Xiaomi: {
+    BOOK: ["negro", "azul", "rojo"],
+    "BOOK NL": ["negro", "azul", "rojo"],
+    "360": [],
+    SILICONA: ["negro", "transparente"],
+    DURA: [],
+    RING: ["negro", "azul", "rojo"],
+    ARMY: [],
+    CORD: ["negro", "turquesa", "lila"],
+    "SOFT SILICONE (10)": [
+      "red", "baby pink", "purple", "turquesa", "black", "dark green"
+    ],
+    FUN: []
   }
 };
