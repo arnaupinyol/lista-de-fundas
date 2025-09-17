@@ -1,13 +1,12 @@
 // src/components/CatalogViewer.jsx
-import React, { useState } from 'react';
-import { catalog } from '../data/catalog';
-import { MarcaSelector } from './MarcaSelector';
-import { ModeloSelector } from './ModeloSelector';
-import { FundaViewer } from './FundaViewer';
-import { CarreteSidebar } from './CarreteSidebar';
-import './CatalogViewer.css';
+import React, { useState } from "react";
+import { MarcaSelector } from "./MarcaSelector";
+import { ModeloSelector } from "./ModeloSelector";
+import { FundaViewer } from "./FundaViewer";
+import { CarreteSidebar } from "./CarreteSidebar";
+import "./CatalogViewer.css";
 
-const CatalogViewer = () => {
+const CatalogViewer = ({ catalog }) => {
   const [selectedMarca, setSelectedMarca] = useState(null);
   const [selectedModelo, setSelectedModelo] = useState(null);
   const [carrete, setCarrete] = useState([]); // ← Aquí guardaremos las fundas
@@ -23,24 +22,25 @@ const CatalogViewer = () => {
           !(
             item.modelo === itemAEliminar.modelo &&
             item.tipo === itemAEliminar.tipo &&
-            (item.estilo || 'sin-estilo') === (itemAEliminar.estilo || 'sin-estilo')
+            (item.estilo || "sin-estilo") ===
+              (itemAEliminar.estilo || "sin-estilo")
           )
       )
     );
   };
 
-
+  // Paso 1: elegir marca
   if (!selectedMarca) {
     return (
       <MarcaSelector
-        marcas={catalog}
+        marcas={catalog} // ✅ Ahora viene como prop desde App.jsx
         onSelectMarca={setSelectedMarca}
-        carrete={carrete} // ✅ Esto es lo nuevo
+        carrete={carrete}
       />
     );
   }
 
-
+  // Paso 2: elegir modelo
   if (!selectedModelo) {
     return (
       <ModeloSelector
@@ -51,8 +51,9 @@ const CatalogViewer = () => {
     );
   }
 
+  // Paso 3: ver fundas y el sidebar
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: "flex" }}>
       <div style={{ flex: 1 }}>
         <FundaViewer
           marca={selectedMarca}

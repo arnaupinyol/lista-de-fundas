@@ -1,13 +1,28 @@
 // src/components/FundaViewer.jsx
-import React, { useState } from 'react';
-import { fundaDesigns } from '../data/designs';
-import './CatalogViewer.css';
+import React, { useState, useEffect } from "react";
+import "./CatalogViewer.css";
 
 export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
-  const marcaNombre = marca.marca === 'iPhone' ? 'Apple' : marca.marca;
+  const marcaNombre = marca.marca === "iPhone" ? "Apple" : marca.marca;
   const [contadores, setContadores] = useState({});
+  const [designs, setDesigns] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const handleIncrement = (tipo, estilo = 'default') => {
+  // 🚀 Cargar diseños desde backend
+  useEffect(() => {
+    fetch("http://localhost:4000/api/designs")
+      .then((res) => res.json())
+      .then((data) => {
+        setDesigns(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error cargando diseños:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleIncrement = (tipo, estilo = "default") => {
     const clave = `${tipo}-${estilo}`;
     setContadores((prev) => ({
       ...prev,
@@ -15,7 +30,7 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
     }));
   };
 
-  const handleDecrement = (tipo, estilo = 'default') => {
+  const handleDecrement = (tipo, estilo = "default") => {
     const clave = `${tipo}-${estilo}`;
     setContadores((prev) => ({
       ...prev,
@@ -23,7 +38,7 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
     }));
   };
 
-  const handleGuardar = (tipo, estilo = 'default') => {
+  const handleGuardar = (tipo, estilo = "default") => {
     const clave = `${tipo}-${estilo}`;
     const cantidad = contadores[clave] || 0;
 
@@ -32,11 +47,11 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
         marca: marca.marca,
         modelo: modelo.nombre,
         tipo,
-        estilo: estilo === 'default' ? null : estilo,
+        estilo: estilo === "default" ? null : estilo,
         cantidad,
       });
 
-      // Resetear el contador después de guardar
+      // Resetear contador después de guardar
       setContadores((prev) => ({
         ...prev,
         [clave]: 0,
@@ -44,6 +59,9 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
     }
   };
 
+  if (loading) {
+    return <p className="p-4">Cargando diseños...</p>;
+  }
 
   return (
     <div>
@@ -53,22 +71,28 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
       <h2 className="titulo-marca">Fundas para {modelo.nombre}</h2>
 
       {modelo.fundas.map((tipo) => {
-        const estilos = fundaDesigns[marcaNombre]?.[tipo];
+        const estilos = designs[marcaNombre]?.[tipo];
 
         return (
-          <div key={tipo} style={{ marginTop: '20px' }}>
+          <div key={tipo} style={{ marginTop: "20px" }}>
             <h3 className="titulo-funda">{tipo}</h3>
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
               {estilos && estilos.length > 0 ? (
                 estilos.map((estilo, index) => {
                   const clave = `${tipo}-${estilo}`;
                   return (
                     <div key={index} className="estilo-funda">
                       <span>{estilo}</span>
-                      <button onClick={() => handleDecrement(tipo, estilo)}>-</button>
+                      <button onClick={() => handleDecrement(tipo, estilo)}>
+                        -
+                      </button>
                       <span>{contadores[clave] || 0}</span>
-                      <button onClick={() => handleIncrement(tipo, estilo)}>+</button>
-                      <button onClick={() => handleGuardar(tipo, estilo)}>Guardar</button>
+                      <button onClick={() => handleIncrement(tipo, estilo)}>
+                        +
+                      </button>
+                      <button onClick={() => handleGuardar(tipo, estilo)}>
+                        Guardar
+                      </button>
                     </div>
                   );
                 })
