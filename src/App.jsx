@@ -9,7 +9,7 @@ function App() {
 
   // Cargar catálogo desde el backend
   useEffect(() => {
-    fetch("http://localhost:4000/api/catalog")
+    fetch("/api/catalog")
       .then((res) => res.json())
       .then((data) => {
         setCatalog(data);

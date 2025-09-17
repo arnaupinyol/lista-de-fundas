@@ -10,7 +10,7 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
 
   // 🚀 Cargar diseños desde backend
   useEffect(() => {
-    fetch("http://localhost:4000/api/designs")
+    fetch("/api/designs")
       .then((res) => res.json())
       .then((data) => {
         setDesigns(data);
