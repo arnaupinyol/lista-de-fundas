@@ -1,0 +1,37 @@
+.marca-carrusel {
+  width: 100%;
+  overflow: hidden;
+  padding: 20px 0;
+}
+
+.marca-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll var(--scroll-duration, 30s) linear infinite;
+}
+
+.marca-item {
+  flex: 0 0 auto;
+  margin: 0 40px;
+  cursor: pointer;
+}
+
+.marca-item img {
+  width: 280px;
+  height: 280px;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+.marca-item img:hover {
+  transform: scale(1.15);
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
