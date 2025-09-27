@@ -29,7 +29,11 @@
       { "nombre": "iPhone 16 Pro", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "MAGSAFE NUEVA", "MAGSAFE SILICONA", "SOFT SILICONE (10)", "FUN"] },
       { "nombre": "iPhone 16 Plus", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "MAGSAFE NUEVA", "MAGSAFE SILICONA", "SOFT SILICONE (10)", "FUN"] },
       { "nombre": "iPhone 16 Pro Max", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "MAGSAFE NUEVA", "MAGSAFE SILICONA", "SOFT SILICONE (10)", "FUN"] },
-      { "nombre": "iPhone 16e", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "MAGSAFE NUEVA", "MAGSAFE SILICONA", "SOFT SILICONE (10)", "FUN"] }
+      { "nombre": "iPhone 16e", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "MAGSAFE NUEVA", "MAGSAFE SILICONA", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "iPhone 17", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "MAGSAFE NUEVA", "MAGSAFE SILICONA", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "iPhone 17 Pro", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "MAGSAFE NUEVA", "MAGSAFE SILICONA", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "iPhone 17 Pro Max", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "MAGSAFE NUEVA", "MAGSAFE SILICONA", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "iPhone 17 air", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "MAGSAFE NUEVA", "MAGSAFE SILICONA", "SOFT SILICONE (10)", "FUN"] }
     ]
   },
   {
@@ -76,7 +80,19 @@
       { "nombre": "Galaxy A23", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
       { "nombre": "Galaxy A22", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
       { "nombre": "Galaxy A21s", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
-      { "nombre": "Galaxy A20e", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] }
+      { "nombre": "Galaxy A20e", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A26", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A14", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A13", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A12", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A17", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A16", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A15", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A06", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A05", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A05s", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A03s", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] },
+      { "nombre": "Galaxy A03", "fundas": ["BOOK", "BOOK NL", "360", "SILICONA", "DURA", "RING", "ARMY", "CORD", "MAGSAFE", "SOFT SILICONE (10)", "FUN"] }
     ]
   },
   {

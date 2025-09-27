@@ -60,7 +60,15 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
   };
 
   if (loading) {
-    return <p className="p-4">Cargando diseños...</p>;
+    return (
+      <div className="p-4 flex justify-center items-center min-h-screen">
+        <img
+          src="/loading.gif"
+          alt="Cargando..."
+          className="w-24 h-24 object-contain"
+        />
+      </div>
+    );
   }
 
   return (
