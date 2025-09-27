@@ -22,7 +22,7 @@ export const CarreteSidebar = ({ items, onEliminarFunda }) => {
         <p style={{ fontStyle: 'italic', color: '#555' }}>Vacío</p>
       ) : (
         <ul>
-          {fundasAgrupadas.map((item, index) => (
+          {fundasAgrupadas.slice().reverse().map((item, index) => (
             <li key={index}>
               {item.modelo} – {item.tipo}
               {item.estilo && ` (${item.estilo})`} × <strong>{item.cantidad}</strong>

@@ -1,114 +1,118 @@
 // src/components/FundaViewer.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import "./CatalogViewer.css";
 
 export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
-  const marcaNombre = marca.marca === "iPhone" ? "Apple" : marca.marca;
+  // contadores por combinación tipo-estilo
   const [contadores, setContadores] = useState({});
-  const [designs, setDesigns] = useState({});
-  const [loading, setLoading] = useState(true);
 
-  // 🚀 Cargar diseños desde backend
-  useEffect(() => {
-    fetch("/api/designs")
-      .then((res) => res.json())
-      .then((data) => {
-        setDesigns(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error cargando diseños:", err);
-        setLoading(false);
-      });
-  }, []);
+  // Construir un mapa tipo -> variaciones a partir de marca.fundas.
+  // Acepta varias formas: marca.fundas puede ser [{ tipo, variaciones }, ...]
+  const tipoMap = useMemo(() => {
+    const map = {};
+    if (!marca || !marca.fundas) return map;
 
+    for (const f of marca.fundas) {
+      // soporte por si la propiedad viene con distinto nombre
+      const tipo = f.tipo || f.tipo_funda || f.type || f.name;
+      const variaciones = f.variaciones || f.variations || f.styles || [];
+      if (!tipo) continue;
+      map[tipo] = Array.isArray(variaciones) ? variaciones : [];
+    }
+    return map;
+  }, [marca]);
+
+  // Determinar la lista de tipos que corresponden al modelo seleccionado.
+  // Si el modelo trae su propia lista (strings), la usamos; si no, usamos todas las de la marca.
+  const tiposParaModelo = useMemo(() => {
+    if (!modelo) return [];
+
+    // Si el modelo trae fundas como array de strings (ej: ["BOOK","SILICONA"])
+    if (Array.isArray(modelo.fundas) && modelo.fundas.length > 0) {
+      return modelo.fundas;
+    }
+
+    // Si modelo no tiene fundas, devolver todos los tipos de la marca
+    return Object.keys(tipoMap);
+  }, [modelo, tipoMap]);
+
+  // helpers de contadores
   const handleIncrement = (tipo, estilo = "default") => {
-    const clave = `${tipo}-${estilo}`;
-    setContadores((prev) => ({
-      ...prev,
-      [clave]: (prev[clave] || 0) + 1,
-    }));
+    const clave = `${tipo}:::${estilo}`;
+    setContadores((prev) => ({ ...prev, [clave]: (prev[clave] || 0) + 1 }));
   };
 
   const handleDecrement = (tipo, estilo = "default") => {
-    const clave = `${tipo}-${estilo}`;
-    setContadores((prev) => ({
-      ...prev,
-      [clave]: Math.max((prev[clave] || 0) - 1, 0),
-    }));
+    const clave = `${tipo}:::${estilo}`;
+    setContadores((prev) => ({ ...prev, [clave]: Math.max((prev[clave] || 0) - 1, 0) }));
   };
 
   const handleGuardar = (tipo, estilo = "default") => {
-    const clave = `${tipo}-${estilo}`;
+    const clave = `${tipo}:::${estilo}`;
     const cantidad = contadores[clave] || 0;
+    if (cantidad <= 0) return;
 
-    if (cantidad > 0) {
-      onGuardarFunda({
-        marca: marca.marca,
-        modelo: modelo.nombre,
-        tipo,
-        estilo: estilo === "default" ? null : estilo,
-        cantidad,
-      });
+    onGuardarFunda({
+      marca: marca.marca || marca.nombre || marca, // soporta distintos nombres
+      modelo: modelo.nombre,
+      tipo,
+      estilo: estilo === "default" ? null : estilo,
+      cantidad,
+    });
 
-      // Resetear contador después de guardar
-      setContadores((prev) => ({
-        ...prev,
-        [clave]: 0,
-      }));
-    }
+    // resetear el contador para esa combinación
+    setContadores((prev) => ({ ...prev, [clave]: 0 }));
   };
 
-  if (loading) {
+  // si no hay marca/modelo o no hay tipos, mostrar mensaje
+  if (!marca || !modelo) {
     return (
-      <div className="p-4 flex justify-center items-center min-h-screen">
-        <img
-          src="/loading.gif"
-          alt="Cargando..."
-          className="w-24 h-24 object-contain"
-        />
+      <div>
+        <button onClick={onVolver} className="boton-marca">← Volver</button>
+        <div className="p-4">Selecciona una marca y un modelo.</div>
       </div>
     );
   }
 
+  // DEBUG (opcional): descomenta si quieres ver en consola cómo se mapean tipos/variaciones
+  // console.log("tipoMap:", tipoMap);
+  // console.log("tiposParaModelo:", tiposParaModelo);
+
   return (
     <div>
-      <button onClick={onVolver} className="boton-marca">
-        ← Volver a modelos
-      </button>
+      <button onClick={onVolver} className="boton-marca">← Volver a modelos</button>
       <h2 className="titulo-marca">Fundas para {modelo.nombre}</h2>
 
-      {modelo.fundas.map((tipo) => {
-        const estilos = designs[marcaNombre]?.[tipo];
+      {tiposParaModelo.length === 0 && (
+        <div>No hay tipos de fundas disponibles para este modelo.</div>
+      )}
+
+      {tiposParaModelo.map((tipo) => {
+        // Busca las variaciones para este tipo en el mapa; si no existen, se muestra "Sin estilo".
+        const estilos = tipoMap[tipo] || [];
 
         return (
           <div key={tipo} style={{ marginTop: "20px" }}>
             <h3 className="titulo-funda">{tipo}</h3>
             <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              {estilos && estilos.length > 0 ? (
+              {estilos.length > 0 ? (
                 estilos.map((estilo, index) => {
-                  const clave = `${tipo}-${estilo}`;
+                  const clave = `${tipo}:::${estilo}`;
                   return (
                     <div key={index} className="estilo-funda">
-                      <span>{estilo}</span>
-                      <button onClick={() => handleDecrement(tipo, estilo)}>
-                        -
-                      </button>
-                      <span>{contadores[clave] || 0}</span>
-                      <button onClick={() => handleIncrement(tipo, estilo)}>
-                        +
-                      </button>
-                      <button onClick={() => handleGuardar(tipo, estilo)}>
-                        Guardar
-                      </button>
+                      <span style={{ marginRight: 8 }}>{estilo}</span>
+                      <button onClick={() => handleDecrement(tipo, estilo)}>-</button>
+                      <span style={{ margin: "0 8px" }}>{contadores[clave] || 0}</span>
+                      <button onClick={() => handleIncrement(tipo, estilo)}>+</button>
+                      <button onClick={() => handleGuardar(tipo, estilo)} style={{ marginLeft: 8 }}>Guardar</button>
                     </div>
                   );
                 })
               ) : (
                 <div className="estilo-funda">
-                  <span>Sin estilo</span>
+                  <span style={{ marginRight: 8 }}>Sin estilo</span>
                   <button onClick={() => handleDecrement(tipo)}>-</button>
-                  <span>{contadores[`${tipo}-default`] || 0}</span>
+                  <span style={{ margin: "0 8px" }}>{contadores[`${tipo}:::default`] || 0}</span>
                   <button onClick={() => handleIncrement(tipo)}>+</button>
                   <button onClick={() => handleGuardar(tipo)}>Guardar</button>
                 </div>
