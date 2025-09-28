@@ -134,13 +134,21 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
               {estilos.length > 0 ? (
                 estilos.map((estilo, index) => {
                   const clave = `${tipo}:::${estilo}`;
+                  const cantidad = contadores[clave] || 0;
                   return (
                     <div key={index} className="estilo-funda">
                       <span style={{ marginRight: 8 }}>{estilo}</span>
                       <button onClick={() => handleDecrement(tipo, estilo)}>-</button>
-                      <span style={{ margin: "0 8px" }}>{contadores[clave] || 0}</span>
+                      <span style={{ margin: "0 8px" }}>{cantidad}</span>
                       <button onClick={() => handleIncrement(tipo, estilo)}>+</button>
-                      <button onClick={() => handleGuardar(tipo, estilo)} style={{ marginLeft: 8 }}>Guardar</button>
+                      {cantidad > 0 && (
+                        <button
+                          onClick={() => handleGuardar(tipo, estilo)}
+                          style={{ marginLeft: 8, background: "none", border: "none", padding: 0, cursor: "pointer" }}
+                        >
+                          <img src="/guardar.png" alt="Guardar" style={{ height: 32, objectFit: "contain" }} />
+                        </button>
+                      )}
                     </div>
                   );
                 })
@@ -150,7 +158,14 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
                   <button onClick={() => handleDecrement(tipo)}>-</button>
                   <span style={{ margin: "0 8px" }}>{contadores[`${tipo}:::default`] || 0}</span>
                   <button onClick={() => handleIncrement(tipo)}>+</button>
-                  <button onClick={() => handleGuardar(tipo)}>Guardar</button>
+                  {(contadores[`${tipo}:::default`] || 0) > 0 && (
+                    <button
+                      onClick={() => handleGuardar(tipo)}
+                      style={{ marginLeft: 8, background: "none", border: "none", padding: 0, cursor: "pointer" }}
+                    >
+                      <img src="/guardar.png" alt="Guardar" style={{ height: 32, objectFit: "contain" }} />
+                    </button>
+                  )}
                 </div>
               )}
             </div>
