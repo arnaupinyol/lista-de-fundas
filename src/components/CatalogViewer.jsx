@@ -6,7 +6,7 @@ import { FundaViewer } from "./FundaViewer";
 import { CarreteSidebar } from "./CarreteSidebar";
 import "./CatalogViewer.css";
 
-const CatalogViewer = ({ catalog }) => {
+const CatalogViewer = ({ marcas }) => {
   const [selectedMarca, setSelectedMarca] = useState(null);
   const [selectedModelo, setSelectedModelo] = useState(null);
   const [carrete, setCarrete] = useState([]);
@@ -24,17 +24,28 @@ const CatalogViewer = ({ catalog }) => {
     );
 
   if (!selectedMarca) {
-    return <MarcaSelector marcas={catalog} onSelectMarca={setSelectedMarca} carrete={carrete} />;
+    return <MarcaSelector marcas={marcas} onSelectMarca={setSelectedMarca} carrete={carrete} />;
   }
 
   if (!selectedModelo) {
-    return <ModeloSelector marca={selectedMarca} onSelectModelo={setSelectedModelo} onVolver={() => setSelectedMarca(null)} />;
+    return (
+      <ModeloSelector
+        marca={selectedMarca}
+        onSelectModelo={setSelectedModelo}
+        onVolver={() => setSelectedMarca(null)}
+      />
+    );
   }
 
   return (
     <div style={{ display: "flex" }}>
       <div style={{ flex: 1 }}>
-        <FundaViewer marca={selectedMarca} modelo={selectedModelo} onVolver={() => setSelectedModelo(null)} onGuardarFunda={agregarAlCarrete} />
+        <FundaViewer
+          marca={selectedMarca}
+          modelo={selectedModelo}
+          onVolver={() => setSelectedModelo(null)}
+          onGuardarFunda={agregarAlCarrete}
+        />
       </div>
       <CarreteSidebar items={carrete} onEliminarFunda={eliminarDelCarrete} />
     </div>

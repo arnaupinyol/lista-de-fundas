@@ -5,11 +5,8 @@ import './CatalogViewer.css';
 
 export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
   const exportarPDF = () => {
-  // Primero agrupamos por modelo, luego por tipo y estilo dentro de cada modelo
     const agrupadoPorModelo = carrete.reduce((acc, item) => {
-      if (!acc[item.modelo]) {
-        acc[item.modelo] = {};
-      }
+      if (!acc[item.modelo]) acc[item.modelo] = {};
       const clave = `${item.tipo}-${item.estilo || 'sin-estilo'}`;
       if (!acc[item.modelo][clave]) {
         acc[item.modelo][clave] = { ...item };
@@ -24,28 +21,23 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
     doc.text('Carrito de fundas', 20, 20);
 
     let y = 30;
-
     if (Object.keys(agrupadoPorModelo).length === 0) {
       doc.setFontSize(12);
       doc.text('El carrito está vacío.', 20, y);
     } else {
-      Object.entries(agrupadoPorModelo).forEach(([modelo, fundas], idxModelo) => {
+      Object.entries(agrupadoPorModelo).forEach(([modelo, fundas]) => {
         doc.setFontSize(14);
         doc.text(`Modelo: ${modelo}`, 20, y);
         y += 10;
 
-        Object.values(fundas).forEach((item, idxFunda) => {
+        Object.values(fundas).forEach((item) => {
           const estilo = item.estilo ? ` (${item.estilo})` : '';
           doc.setFontSize(12);
-          doc.text(
-            `• ${item.tipo}${estilo} × ${item.cantidad}`,
-            30,
-            y
-          );
+          doc.text(`• ${item.tipo}${estilo} × ${item.cantidad}`, 30, y);
           y += 10;
         });
 
-        y += 5; // Espacio entre modelos
+        y += 5;
         if (y > 280) {
           doc.addPage();
           y = 20;
@@ -53,10 +45,9 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
       });
     }
 
-    const fecha = new Date().toISOString().slice(0, 10); //
+    const fecha = new Date().toISOString().slice(0, 10);
     doc.save(`carrito-${fecha}.pdf`);
   };
-
 
   return (
     <div>
@@ -64,7 +55,7 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
       <div style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
         {marcas.map((marcaObj) => (
           <button
-            key={marcaObj.marca}
+            key={marcaObj.id}  // ✅ id único
             onClick={() => onSelectMarca(marcaObj)}
             className="boton-marca"
             style={{
@@ -76,17 +67,18 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
               height: '350px'
             }}
           >
-          <img className="logo-imagen"
-            src={marcaObj.logo}
-            alt={marcaObj.marca}
-            style={{
-              width: '270px',
-              height: '270px',
-              objectFit: 'contain',
-              maxWidth: 'none',
-              maxHeight: 'none'
-            }}
-          />
+            <img
+              className="logo-imagen"
+              src={marcaObj.logo}
+              alt={marcaObj.nombre}  // ✅ usar nombre
+              style={{
+                width: '270px',
+                height: '270px',
+                objectFit: 'contain',
+                maxWidth: 'none',
+                maxHeight: 'none'
+              }}
+            />
           </button>
         ))}
       </div>
