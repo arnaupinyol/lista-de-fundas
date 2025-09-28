@@ -69,7 +69,11 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
 
       <h2 className="titulo-marca">Fundas para {modelo.nombre}</h2>
 
-      {loading && <div>Cargando fundas…</div>}
+      {loading && (
+        <div style={{ minHeight: "40vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <img src="/loading.gif" alt="Cargando..." style={{ width: 96, height: 96, objectFit: "contain" }} />
+        </div>
+      )}
       {!loading && !tiposParaMarca.length && <div>No hay fundas disponibles.</div>}
 
       {!loading && tiposParaMarca.map((tipo) => {

@@ -34,7 +34,11 @@ export const ModeloSelector = ({ marca, onSelectModelo, onVolver }) => {
 
       <h2 className="titulo-marca">Modelos de {marca.marca}</h2>
 
-      {loading && <div>Cargando modelos…</div>}
+      {loading && (
+        <div style={{ minHeight: "40vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <img src="/loading.gif" alt="Cargando..." style={{ width: 96, height: 96, objectFit: "contain" }} />
+        </div>
+      )}
       {!loading && modelos.map((modelo) => (
         <button key={modelo.id} onClick={() => onSelectModelo(modelo)} className="boton-modelo">
           {modelo.nombre}

@@ -24,7 +24,12 @@ function App() {
     })();
   }, []);
 
-  if (loading) return <div>Cargando catálogo...</div>;
+  if (loading)
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <img src="/loading.gif" alt="Cargando..." style={{ width: 96, height: 96, objectFit: "contain" }} />
+      </div>
+    );
   if (!marcas.length) return <div>No hay marcas disponibles</div>;
 
   return <CatalogViewer marcas={marcas} />;
