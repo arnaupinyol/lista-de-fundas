@@ -10,19 +10,27 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
 
   // Cargar fundas por marca (no hay fundas por modelo en tu tabla)
   useEffect(() => {
-    (async () => {
-      if (!marca) return;
-      setLoading(true);
-      const { data, error } = await getFundasPorMarca(marca.id);
-      if (error) {
-        console.error("❌ Error fundas por marca:", error);
-        setFundas([]);
-      } else {
-        setFundas(data || []);  // variaciones ya es array
+  (async () => {
+    if (!marca) return;
+    setLoading(true);
+    const { data, error } = await getFundasPorMarca(marca.id);
+    if (error) {
+      console.error("❌ Error fundas por marca:", error);
+      setFundas([]);
+    } else {
+      let lista = data || [];
+
+      // 🔥 Si el modelo tiene definida su lista de fundas, filtramos
+      if (Array.isArray(modelo.fundas) && modelo.fundas.length > 0) {
+        lista = lista.filter((f) => modelo.fundas.includes(f.tipo_funda));
       }
-      setLoading(false);
-    })();
-  }, [marca]);
+
+      setFundas(lista);
+    }
+    setLoading(false);
+  })();
+}, [marca, modelo]);
+
 
 
   const tipoMap = useMemo(() => {

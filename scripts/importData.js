@@ -18,7 +18,7 @@ async function importData() {
       // 1. Insertar marca
       const { data: marcaData, error: marcaError } = await supabase
         .from('marcas')
-        .insert({ nombre: marca.marca, logo: marca.logo })
+        .insert({ nombre: marca.nombre, logo: marca.logo })
         .select()
         .single();
 
@@ -41,7 +41,7 @@ async function importData() {
       // 3. Insertar fundas UNA sola vez por marca
       const tiposFundas = [...new Set(marca.modelos.flatMap(m => m.fundas))];
       for (const tipoFunda of tiposFundas) {
-        const variaciones = designs[marca.marca]?.[tipoFunda] || [];
+        const variaciones = designs[marca.nombre]?.[tipoFunda] || [];
         const { error: fundaError } = await supabase
           .from('fundas')
           .insert({
