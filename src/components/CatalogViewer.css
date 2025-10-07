@@ -9,10 +9,11 @@
   --color-hover-exportar: #96a8a2;
 }
 
-
-body
-{
+body {
   background-color: var(--color-background);
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, sans-serif;
 }
 
 .titulo-marca {
@@ -31,33 +32,36 @@ body
   color: var(--color-texto);
 }
 
+/* 🔹 Botons escalables i adaptatius */
 .boton-marca, .boton-modelo {
-  font-size: 1.2rem;
-  padding: 12px 20px;
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  padding: clamp(8px, 2vw, 12px) clamp(10px, 3vw, 20px);
   margin: 10px 10px;
   background-color: var(--color-boton);
   color: var(--color-texto);
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .boton-marca:hover,
 .boton-modelo:hover {
   background-color: var(--color-hover-boton);
+  transform: scale(1.05);
 }
 
 .estilo-funda {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 8px;
-  margin: 10px 10px;
+  margin: 10px;
   background: var(--color-funda);
   border-radius: 10px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .nombre-estilo {
@@ -87,41 +91,23 @@ body
 
 .boton-exportar {
   background-color: var(--color-funda);
-  margin: 10px 10px;
+  margin: 10px;
   color: var(--color-texto);
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
   font-size: 14px;
   cursor: pointer;
-  margin-bottom: 10px;
 }
 
 .boton-exportar:hover {
   background-color: var(--color-hover-exportar);
 }
 
-/* Aplica a todos los botones */
-button {
-  transition: transform 0.3s ease;
-}
-
-/* Aumenta el tamaño cuando se pasa el ratón por encima */
-button:hover {
-  transform: scale(1.05); /* Puedes ajustar el valor (1.1 es más grande) */
-}
-
 @keyframes vibrate {
   0%   { transform: translate(0, 0) rotate(0deg); }
   10%  { transform: translate(-2px, 2px) rotate(-2deg); }
   20%  { transform: translate(2px, -2px) rotate(2deg); }
-  30%  { transform: translate(-2px, 2px) rotate(-2deg); }
-  40%  { transform: translate(2px, -2px) rotate(2deg); }
-  50%  { transform: translate(-2px, 2px) rotate(-2deg); }
-  60%  { transform: translate(2px, -2px) rotate(2deg); }
-  70%  { transform: translate(-2px, 2px) rotate(-2deg); }
-  80%  { transform: translate(2px, -2px) rotate(2deg); }
-  90%  { transform: translate(-2px, 2px) rotate(-2deg); }
   100% { transform: translate(0, 0) rotate(0deg); }
 }
 
@@ -129,5 +115,40 @@ button:hover {
   animation: vibrate 0.8s infinite;
 }
 
+/* --- 📱 Ajustos per a mòbils --- */
+@media (max-width: 768px) {
+  .titulo-marca, .titulo-funda {
+    font-size: 1.4rem;
+    text-align: center;
+  }
 
+  .boton-marca, .boton-modelo {
+    width: 100%;
+    margin: 6px 0;
+  }
 
+  .estilo-funda {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .carrete-sidebar {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+    padding: 10px;
+    border-top: 2px solid var(--color-hover-boton);
+  }
+
+  .catalogo-container,
+  .marca-lista,
+  .fundas-lista {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

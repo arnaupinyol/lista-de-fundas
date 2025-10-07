@@ -10,13 +10,15 @@
 }
 
 .carrete-sidebar {
-  width: 275px;
+  max-width: 275px;
+  width: 100%;
   padding: 20px;
   background-color: var(--color-boton);
   height: 100vh;
   overflow-y: auto;
   position: sticky;
   top: 0;
+  box-sizing: border-box;
 }
 
 .carrete-sidebar h3 {
@@ -27,6 +29,7 @@
 .carrete-sidebar ul {
   list-style: none;
   padding-left: 0;
+  margin: 0;
 }
 
 .carrete-sidebar li {
@@ -34,4 +37,34 @@
   margin-bottom: 8px;
   padding: 6px 10px;
   border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* --- 📱 Ajustos per a mòbil --- */
+@media (max-width: 768px) {
+  .carrete-sidebar {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+    padding: 10px;
+    border-top: 2px solid var(--color-hover-boton);
+    z-index: 1000;
+  }
+
+  .carrete-sidebar li {
+    font-size: 0.9rem;
+    padding: 6px;
+    text-align: center;
+  }
+
+  .carrete-sidebar button {
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
 }

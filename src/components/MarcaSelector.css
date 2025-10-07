@@ -1,16 +1,30 @@
+/* src/components/MarcaSelector.css */
+
 .marca-item {
   flex: 0 0 auto;
   margin: 0 40px;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
 .marca-item img {
-  width: 280px;
-  height: 280px;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
   object-fit: contain;
-  transition: transform 0.3s;
 }
 
 .marca-item img:hover {
   transform: scale(1.15);
+}
+
+/* --- 📱 Ajustos per a mòbils --- */
+@media (max-width: 768px) {
+  .marca-item {
+    margin: 10px 0;
+  }
+
+  .marca-item img {
+    max-width: 160px;
+  }
 }
