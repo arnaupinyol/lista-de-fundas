@@ -29,6 +29,27 @@ export const AñadirFunda = ({ marca, onClose, onFundaAñadida }) => {
     onClose();
   };
 
+  const renderColorCircle = (color) => (
+    <span
+      key={color}
+      title={color}
+      style={{
+        display: "inline-block",
+        width: 22,
+        height: 22,
+        borderRadius: "50%",
+        backgroundColor: color.startsWith("#") ? color : "#ccc",
+        border: "1px solid #555",
+        marginRight: 6,
+      }}
+    ></span>
+  );
+
+  const coloresPrevios = variacionesTexto
+    .split(",")
+    .map((v) => v.trim())
+    .filter(Boolean);
+
   return (
     <div
       style={{
@@ -53,11 +74,14 @@ export const AñadirFunda = ({ marca, onClose, onFundaAñadida }) => {
           style={{ width: "100%", padding: "8px", marginBottom: "12px" }}
         />
         <textarea
-          placeholder="Variaciones separadas por coma (ej: Rojo, Azul, Negro)"
+          placeholder="Códigos de color separados por coma (ej: #ff0000, #00ff00, #0000ff)"
           value={variacionesTexto}
           onChange={(e) => setVariacionesTexto(e.target.value)}
           style={{ width: "100%", padding: "8px", minHeight: "80px" }}
         />
+        <div style={{ marginTop: "8px", display: "flex", flexWrap: "wrap" }}>
+          {coloresPrevios.map(renderColorCircle)}
+        </div>
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px", marginTop: "12px" }}>
           <button onClick={onClose} className="boton-marca">Cancelar</button>
           <button onClick={guardarFunda} className="boton-marca">Guardar</button>

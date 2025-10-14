@@ -6,13 +6,11 @@ import "./CatalogViewer.css";
 export const FundasManager = ({ marca, onVolver }) => {
   const [fundas, setFundas] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [showAñadir, setShowAñadir] = useState(false);
   const [nuevoTipo, setNuevoTipo] = useState("");
   const [variacionesTexto, setVariacionesTexto] = useState("");
   const [fundaAEliminar, setFundaAEliminar] = useState(null);
 
-  // cargar fundas
   useEffect(() => {
     (async () => {
       const { data, error } = await getFundasPorMarca(marca.id);
@@ -51,6 +49,22 @@ export const FundasManager = ({ marca, onVolver }) => {
     setFundaAEliminar(null);
   };
 
+  const renderColorCircle = (color) => (
+    <span
+      key={color}
+      title={color}
+      style={{
+        display: "inline-block",
+        width: 20,
+        height: 20,
+        borderRadius: "50%",
+        backgroundColor: color.startsWith("#") ? color : "#ccc",
+        border: "1px solid #555",
+        marginRight: 6,
+      }}
+    ></span>
+  );
+
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -63,7 +77,7 @@ export const FundasManager = ({ marca, onVolver }) => {
             padding: 0,
             display: "flex",
             alignItems: "center",
-            gap: "8px"
+            gap: "8px",
           }}
         >
           <span style={{ fontSize: "1.5em" }}>←</span>
@@ -73,39 +87,70 @@ export const FundasManager = ({ marca, onVolver }) => {
             style={{ height: 40, objectFit: "contain" }}
           />
         </button>
-        <button onClick={() => setShowAñadir(true)} className="boton-marca">➕ Añadir funda</button>
+        <button onClick={() => setShowAñadir(true)} className="boton-marca">
+          ➕ Añadir funda
+        </button>
       </div>
 
       <h2 className="titulo-marca">Fundas de {marca.nombre}</h2>
       {loading && <div>Cargando fundas...</div>}
-      {!loading && fundas.map((f) => (
-        <div key={f.id} style={{ position: "relative", marginBottom: 8, padding: "6px 10px", background: "#eee", borderRadius: 6 }}>
-          {f.tipo_funda} {f.variaciones?.length ? `(${f.variaciones.join(", ")})` : ""}
-          <button
-            onClick={() => setFundaAEliminar(f)}
+
+      {!loading &&
+        fundas.map((f) => (
+          <div
+            key={f.id}
             style={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              background: "red",
-              color: "white",
-              border: "none",
-              borderRadius: "50%",
-              width: 24,
-              height: 24,
-              cursor: "pointer",
+              position: "relative",
+              marginBottom: 8,
+              padding: "6px 10px",
+              background: "#eee",
+              borderRadius: 6,
             }}
           >
-            ×
-          </button>
-        </div>
-      ))}
+            {f.tipo_funda}{" "}
+            {f.variaciones?.length
+              ? f.variaciones.map((color) => renderColorCircle(color))
+              : ""}
+            <button
+              onClick={() => setFundaAEliminar(f)}
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                background: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "50%",
+                width: 24,
+                height: 24,
+                cursor: "pointer",
+              }}
+            >
+              ×
+            </button>
+          </div>
+        ))}
       {!loading && !fundas.length && <div>No hay fundas.</div>}
 
-      {/* Popup añadir funda */}
       {showAñadir && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <div style={{ background: "white", padding: 20, borderRadius: 8, width: 400 }}>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: 20,
+              borderRadius: 8,
+              width: 400,
+            }}
+          >
             <h3>Añadir funda</h3>
             <input
               type="text"
@@ -117,26 +162,56 @@ export const FundasManager = ({ marca, onVolver }) => {
             <textarea
               value={variacionesTexto}
               onChange={(e) => setVariacionesTexto(e.target.value)}
-              placeholder="Variaciones separadas por coma"
-              style={{ width: "100%", marginBottom: 12, padding: 8, minHeight: 80 }}
+              placeholder="Códigos de color separados por coma (ej: #ff0000, #00ff00)"
+              style={{
+                width: "100%",
+                marginBottom: 12,
+                padding: 8,
+                minHeight: 80,
+              }}
             />
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
-              <button onClick={() => setShowAñadir(false)} className="boton-marca">Cancelar</button>
-              <button onClick={guardarFunda} className="boton-marca">Guardar</button>
+              <button onClick={() => setShowAñadir(false)} className="boton-marca">
+                Cancelar
+              </button>
+              <button onClick={guardarFunda} className="boton-marca">
+                Guardar
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Popup eliminar funda */}
       {fundaAEliminar && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <div style={{ background: "white", padding: 20, borderRadius: 8, width: 300 }}>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: 20,
+              borderRadius: 8,
+              width: 300,
+            }}
+          >
             <h3>¿Eliminar funda?</h3>
             <p>{fundaAEliminar.tipo_funda}</p>
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
-              <button onClick={() => setFundaAEliminar(null)} className="boton-marca">Cancelar</button>
-              <button onClick={confirmarEliminar} className="boton-marca" style={{ background: "red", color: "white" }}>
+              <button onClick={() => setFundaAEliminar(null)} className="boton-marca">
+                Cancelar
+              </button>
+              <button
+                onClick={confirmarEliminar}
+                className="boton-marca"
+                style={{ background: "red", color: "white" }}
+              >
                 Eliminar
               </button>
             </div>
