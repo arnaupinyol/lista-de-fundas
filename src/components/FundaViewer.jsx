@@ -27,6 +27,7 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
     })();
   }, [marca, modelo]);
 
+  // Agrupar fundas per tipus
   const tipoMap = useMemo(() => {
     const map = {};
     for (const f of fundas) {
@@ -42,6 +43,7 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
 
   const tiposParaMarca = useMemo(() => Object.keys(tipoMap), [tipoMap]);
 
+  // Control de quantitats
   const keyOf = (tipo, estilo = "default") => `${tipo}:::${estilo}`;
   const inc = (tipo, estilo = "default") =>
     setContadores((p) => ({
@@ -67,23 +69,25 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
     setContadores((p) => ({ ...p, [k]: 0 }));
   };
 
-  const renderColorCircle = (color) => (
-    <span
-      title={color}
-      style={{
-        display: "inline-block",
-        width: 28,
-        height: 28,
-        borderRadius: "50%",
-        backgroundColor: color.startsWith("#") ? color : "#ccc",
-        border: "1px solid #555",
-        marginRight: 8,
-      }}
-    ></span>
-  );
+  // 🔍 Funció per detectar colors foscos
+  const esColorFosc = (color) => {
+    if (!color) return false;
+    const c = color.trim().toLowerCase();
+    if (["#000", "#000000", "black", "rgb(0,0,0)"].includes(c)) return true;
+    // Si és hexadecimal llarg, calculem la lluminositat
+    if (c.startsWith("#") && c.length === 7) {
+      const r = parseInt(c.slice(1, 3), 16);
+      const g = parseInt(c.slice(3, 5), 16);
+      const b = parseInt(c.slice(5, 7), 16);
+      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      return lum < 60; // qualsevol color molt fosc
+    }
+    return false;
+  };
 
   return (
     <div>
+      {/* 🔙 Botó tornar */}
       <button
         onClick={onVolver}
         className="boton-marca"
@@ -128,67 +132,117 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
       {!loading &&
         tiposParaMarca.map((tipo) => {
           const estilos = tipoMap[tipo] || [];
+          const sinColor = estilos.length === 0;
+
           return (
-            <div key={tipo} style={{ marginTop: "20px" }}>
-              <h3 className="titulo-funda">{tipo}</h3>
-              <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                {estilos.length > 0 ? (
+            <div key={tipo} className="tipo-funda">
+              <h3>{tipo}</h3>
+              <div className="estilos-grid">
+                {/* 🔸 Fundes amb color */}
+                {!sinColor &&
                   estilos.map((estilo) => {
                     const k = keyOf(tipo, estilo);
                     const cantidad = contadores[k] || 0;
+                    const color =
+                      estilo.startsWith("#") ||
+                      [
+                        "black",
+                        "white",
+                        "red",
+                        "blue",
+                        "green",
+                        "pink",
+                        "purple",
+                        "gold",
+                        "silver",
+                        "gray",
+                        "transparent",
+                      ].includes(estilo.toLowerCase())
+                        ? estilo
+                        : "#ccc";
+
+                    const fosc = esColorFosc(color);
+
                     return (
-                      <div key={k} className="estilo-funda">
-                        {renderColorCircle(estilo)}
-                        <button onClick={() => dec(tipo, estilo)}>-</button>
-                        <span style={{ margin: "0 8px" }}>{cantidad}</span>
-                        <button onClick={() => inc(tipo, estilo)}>+</button>
-                        {cantidad > 0 && (
-                          <button
-                            onClick={() => save(tipo, estilo)}
-                            style={{
-                              marginLeft: 8,
-                              background: "none",
-                              border: "none",
-                              padding: 0,
-                              cursor: "pointer",
-                            }}
-                          >
+                      <div key={k} className="color-funda">
+                        <button
+                          className="color-circulo"
+                          onClick={() => cantidad > 0 && save(tipo, estilo)}
+                          title={cantidad > 0 ? "Guardar" : "Selecciona cantidad"}
+                          style={{
+                            backgroundColor: color,
+                            border: "2px solid black",
+                            cursor: cantidad > 0 ? "pointer" : "default",
+                            position: "relative",
+                          }}
+                        >
+                          {cantidad > 0 && (
                             <img
                               src="/guardar.png"
                               alt="Guardar"
-                              style={{ height: 32, objectFit: "contain" }}
+                              style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                height: "26px",
+                                width: "26px",
+                                filter: fosc ? "invert(1)" : "none",
+                              }}
                             />
-                          </button>
-                        )}
+                          )}
+                        </button>
+                        <div className="contador">
+                          <button onClick={() => dec(tipo, estilo)}>-</button>
+                          <span>{cantidad}</span>
+                          <button onClick={() => inc(tipo, estilo)}>+</button>
+                        </div>
                       </div>
                     );
-                  })
-                ) : (
-                  <div className="estilo-funda">
-                    <span style={{ marginRight: 8 }}>Sin color</span>
-                    <button onClick={() => dec(tipo)}>-</button>
-                    <span style={{ margin: "0 8px" }}>
-                      {contadores[keyOf(tipo)] || 0}
-                    </span>
-                    <button onClick={() => inc(tipo)}>+</button>
-                    {(contadores[keyOf(tipo)] || 0) > 0 && (
-                      <button
-                        onClick={() => save(tipo)}
-                        style={{
-                          marginLeft: 8,
-                          background: "none",
-                          border: "none",
-                          padding: 0,
-                          cursor: "pointer",
-                        }}
-                      >
-                        <img
-                          src="/guardar.png"
-                          alt="Guardar"
-                          style={{ height: 32, objectFit: "contain" }}
-                        />
-                      </button>
-                    )}
+                  })}
+
+                {/* 🔸 Fundes sense color */}
+                {sinColor && (
+                  <div className="color-funda">
+                    {(() => {
+                      const k = keyOf(tipo, "default");
+                      const cantidad = contadores[k] || 0;
+                      return (
+                        <>
+                          <button
+                            className="color-circulo"
+                            onClick={() => cantidad > 0 && save(tipo)}
+                            title={cantidad > 0 ? "Guardar" : "Selecciona cantidad"}
+                            style={{
+                              backgroundColor: "#fff",
+                              border: "2px solid black",
+                              cursor: cantidad > 0 ? "pointer" : "default",
+                              position: "relative",
+                            }}
+                          >
+                            {cantidad > 0 && (
+                              <img
+                                src="/guardar.png"
+                                alt="Guardar"
+                                style={{
+                                  position: "absolute",
+                                  top: "50%",
+                                  left: "50%",
+                                  transform: "translate(-50%, -50%)",
+                                  height: "26px",
+                                  width: "26px",
+                                }}
+                              />
+                            )}
+                          </button>
+                          <div className="contador">
+                            <button onClick={() => dec(tipo)}>-</button>
+                            <span>{cantidad}</span>
+                            <button onClick={() => inc(tipo)}>+</button>
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
                 )}
               </div>

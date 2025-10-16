@@ -1,10 +1,26 @@
 /* src/components/MarcaSelector.css */
 
+.marca-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
 .marca-item {
   flex: 0 0 auto;
-  margin: 0 40px;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: var(--color-boton);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.marca-item:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
 
 .marca-item img {
@@ -12,19 +28,6 @@
   max-width: 280px;
   height: auto;
   object-fit: contain;
-}
-
-.marca-item img:hover {
-  transform: scale(1.15);
-}
-
-/* --- 📱 Ajustos per a mòbils --- */
-@media (max-width: 768px) {
-  .marca-item {
-    margin: 10px 0;
-  }
-
-  .marca-item img {
-    max-width: 160px;
-  }
+  display: block;
+  margin: 0 auto;
 }
