@@ -39,25 +39,30 @@
   top: 20px;
   right: 400px;  /* Ajustado para coincidir con el nuevo ancho */
   background-color: var(--color-boton);
-  border: 2px solid var(--color-hover-boton);
-  border-radius: 8px 0 0 8px;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  padding: 6px;
-  transition: all 0.3s ease;
-  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.2);
-  z-index: 999;
+  z-index: 1001;
+  transition: right 280ms ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .toggle-carrete:hover {
-  background-color: var(--color-hover-boton);
-  transform: scale(1.05);
+  background: var(--color-hover-boton);
+}
+
+.toggle-carrete.plegat {
+  right: 20px;  /* Se mantiene igual para cuando está minimizado */
 }
 
 .icono-carrito {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
-  display: block;
 }
 
 /* Quan el carrete està minimitzat, movem el botó al nou costat */
@@ -115,31 +120,78 @@
 
 /* --- Estat minimitzat --- */
 .carrete-sidebar.minimitzat {
-  width: 80px;
-  padding: 12px 4px;
+  width: 0;
+  padding: 0;
   overflow: hidden;
-  transition: width 0.3s ease, padding 0.3s ease;
+  background: transparent;
 }
 
 .carrete-sidebar.minimitzat h3,
 .carrete-sidebar.minimitzat ul,
 .carrete-sidebar.minimitzat li,
-.carrete-sidebar.minimitzat p {
+.carrete-sidebar.minimitzat p,
+.carrete-sidebar.minimitzat .exportar-btn {
   display: none;
 }
 
-/* Ajuste del botón cuando está plegado */
+/* --- Botó sempre visible --- */
+.toggle-carrete {
+  position: fixed;
+  right: 400px;
+  top: 20px;
+  background: var(--color-boton);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1001;
+  transition: right 280ms ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-carrete:hover {
+  background: var(--color-hover-boton);
+}
+
 .toggle-carrete.plegat {
-  right: 80px;  /* Se mantiene igual para cuando está minimizado */
+  right: 20px;
+}
+
+.icono-carrito {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 /* Responsive para móviles */
 @media (max-width: 600px) {
   .carrete-sidebar {
     width: 90vw;  /* En móviles ocupará casi toda la pantalla */
+    right: -100vw;
+    transform: translateX(0);
+  }
+  
+  .carrete-sidebar:not(.minimitzat) {
+    transform: translateX(-100%);
   }
   
   .toggle-carrete {
-    right: 90vw;
+    right: 10px;
   }
+  
+  .toggle-carrete.plegat {
+    right: 10px;
+  }
+}
+
+.exportar-btn:hover {
+  background: var(--color-hover-exportar) !important;
+}
+
+/* Cuando está minimizado, ocultar el botón de exportar */
+.carrete-sidebar.minimitzat .exportar-btn {
+  display: none;
 }

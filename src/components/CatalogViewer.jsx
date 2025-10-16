@@ -3,28 +3,28 @@ import React, { useState } from "react";
 import { MarcaSelector } from "./MarcaSelector";
 import { ModeloSelector } from "./ModeloSelector";
 import { FundaViewer } from "./FundaViewer";
-import { CarreteSidebar } from "./CarreteSidebar";
 import "./CatalogViewer.css";
 
-const CatalogViewer = ({ marcas }) => {
+export const CatalogViewer = ({ marcas, onAgregarAlCarrito }) => {
   const [selectedMarca, setSelectedMarca] = useState(null);
   const [selectedModelo, setSelectedModelo] = useState(null);
-  const [carrete, setCarrete] = useState([]);
 
-  const agregarAlCarrete = (item) => setCarrete(prev => [...prev, item]);
-  const eliminarDelCarrete = (itemAEliminar) =>
-    setCarrete(prev =>
-      prev.filter(item =>
-        !(
-          item.modelo === itemAEliminar.modelo &&
-          item.tipo === itemAEliminar.tipo &&
-          (item.estilo || "sin-estilo") === (itemAEliminar.estilo || "sin-estilo")
-        )
-      )
-    );
+  const handleVolverAModelos = () => {
+    setSelectedModelo(null);
+  };
+
+  const handleVolverAMarcas = () => {
+    setSelectedMarca(null);
+    setSelectedModelo(null);
+  };
 
   if (!selectedMarca) {
-    return <MarcaSelector marcas={marcas} onSelectMarca={setSelectedMarca} carrete={carrete} />;
+    return (
+      <MarcaSelector
+        marcas={marcas}
+        onSelectMarca={setSelectedMarca}
+      />
+    );
   }
 
   if (!selectedModelo) {
@@ -32,22 +32,19 @@ const CatalogViewer = ({ marcas }) => {
       <ModeloSelector
         marca={selectedMarca}
         onSelectModelo={setSelectedModelo}
-        onVolver={() => setSelectedMarca(null)}
+        onVolver={handleVolverAMarcas}
       />
     );
   }
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ flex: 1 }}>
-        <FundaViewer
-          marca={selectedMarca}
-          modelo={selectedModelo}
-          onVolver={() => setSelectedModelo(null)}
-          onGuardarFunda={agregarAlCarrete}
-        />
-      </div>
-      <CarreteSidebar items={carrete} onEliminarFunda={eliminarDelCarrete} />
+    <div className="catalogo-container">
+      <FundaViewer
+        marca={selectedMarca}
+        modelo={selectedModelo}
+        onVolver={handleVolverAModelos}
+        onGuardarFunda={onAgregarAlCarrito}
+      />
     </div>
   );
 };

@@ -63,7 +63,7 @@ export const ModeloSelector = ({ marca, onSelectModelo, onVolver }) => {
         </button>
 
         <button onClick={() => setShowAñadir(true)} className="boton-marca">
-          ➕ Añadir modelo
+          ➕ 
         </button>
 
         <button
@@ -71,11 +71,11 @@ export const ModeloSelector = ({ marca, onSelectModelo, onVolver }) => {
           className="boton-marca"
           style={{ backgroundColor: modoEliminar ? "tomato" : "" }}
         >
-          {modoEliminar ? "❌ Cancelar eliminar" : "🗑️ Eliminar modelo"}
+          {modoEliminar ? "❌" : "🗑️"}
         </button>
 
         <button onClick={() => setEditarFundas(true)} className="boton-marca">
-          ✏️ Editar fundas
+          ✏️
         </button>
       </div>
 

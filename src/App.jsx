@@ -1,38 +1,51 @@
 import React, { useEffect, useState } from "react";
-import CatalogViewer from "./components/CatalogViewer";
+import { CatalogViewer } from "./components/CatalogViewer";
+import { CarreteSidebar } from "./components/CarreteSidebar";
 import { getMarcas } from "./lib/catalogService";
 
 function App() {
   const [marcas, setMarcas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [carritoItems, setCarritoItems] = useState([]);
 
   useEffect(() => {
-    (async () => {
+    const cargarMarcas = async () => {
+      setLoading(true);
       const { data, error } = await getMarcas();
-      if (error) {
-        console.error("❌ Error cargando marcas:", error);
-        setMarcas([]);
-      } else {
-        // Normalizamos con la misma clave que tu tabla: nombre
-        setMarcas((data || []).map((m) => ({
-          id: m.id,
-          nombre: m.nombre,
-          logo: m.logo,
-        })));
+      if (!error && data) {
+        setMarcas(data);
       }
       setLoading(false);
-    })();
+    };
+    cargarMarcas();
   }, []);
 
-  if (loading)
-    return (
-      <div style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <img src="/loading.gif" alt="Cargando..." style={{ width: 96, height: 96, objectFit: "contain" }} />
-      </div>
-    );
-  if (!marcas.length) return <div>No hay marcas disponibles</div>;
+  const handleAgregarAlCarrito = (funda) => {
+    setCarritoItems(prev => [...prev, funda]);
+  };
 
-  return <CatalogViewer marcas={marcas} />;
+  const handleEliminarDelCarrito = (item) => {
+    setCarritoItems(prev => 
+      prev.filter(i => 
+        !(i.modelo === item.modelo && 
+          i.tipo === item.tipo && 
+          i.estilo === item.estilo)
+      )
+    );
+  };
+
+  return (
+    <div>
+      <CatalogViewer 
+        marcas={marcas} 
+        onAgregarAlCarrito={handleAgregarAlCarrito}
+      />
+      <CarreteSidebar 
+        items={carritoItems}
+        onEliminarFunda={handleEliminarDelCarrito}
+      />
+    </div>
+  );
 }
 
 export default App;

@@ -113,9 +113,6 @@ export const MarcaSelector = ({ marcas, onSelectMarca, carrete }) => {
           </button>
         ))}
       </div>
-      <button onClick={exportarPDF} className="boton-exportar">
-        📄 Exportar carrito a PDF
-      </button>
     </div>
   );
 };

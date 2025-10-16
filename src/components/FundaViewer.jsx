@@ -55,18 +55,18 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
       ...p,
       [keyOf(tipo, estilo)]: Math.max((p[keyOf(tipo, estilo)] || 0) - 1, 0),
     }));
-  const save = (tipo, estilo = "default") => {
-    const k = keyOf(tipo, estilo);
-    const cantidad = contadores[k] || 0;
-    if (!cantidad) return;
+  const handleGuardar = (tipo, estilo = "default") => {
     onGuardarFunda({
-      marca: marca.nombre,
       modelo: modelo.nombre,
       tipo,
       estilo: estilo === "default" ? null : estilo,
-      cantidad,
+      cantidad: contadores[keyOf(tipo, estilo)] || 0,
     });
-    setContadores((p) => ({ ...p, [k]: 0 }));
+    // Resetear el contador después de guardar
+    setContadores((prev) => ({
+      ...prev,
+      [keyOf(tipo, estilo)]: 0,
+    }));
   };
 
   // 🔍 Funció per detectar colors foscos
@@ -167,7 +167,7 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
                       <div key={k} className="color-funda">
                         <button
                           className="color-circulo"
-                          onClick={() => cantidad > 0 && save(tipo, estilo)}
+                          onClick={() => cantidad > 0 && handleGuardar(tipo, estilo)}
                           title={cantidad > 0 ? "Guardar" : "Selecciona cantidad"}
                           style={{
                             backgroundColor: color,
@@ -211,7 +211,7 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
                         <>
                           <button
                             className="color-circulo"
-                            onClick={() => cantidad > 0 && save(tipo)}
+                            onClick={() => cantidad > 0 && handleGuardar(tipo)}
                             title={cantidad > 0 ? "Guardar" : "Selecciona cantidad"}
                             style={{
                               backgroundColor: "#fff",
