@@ -1,4 +1,3 @@
-// src/components/FundasManager.jsx
 import React, { useEffect, useState } from "react";
 import { getFundasPorMarca, addFunda, deleteFunda } from "../lib/catalogService";
 import "./CatalogViewer.css";
@@ -26,13 +25,16 @@ export const FundasManager = ({ marca, onVolver }) => {
 
   const guardarFunda = async () => {
     if (!nuevoTipo.trim()) return;
-    const variaciones = variacionesTexto.split(",").map(v => v.trim()).filter(Boolean);
+    const variaciones = variacionesTexto
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean);
     const { data, error } = await addFunda(marca.id, nuevoTipo.trim(), variaciones);
     if (error) {
       alert("Error al añadir funda");
       return;
     }
-    setFundas(prev => [...prev, ...data]);
+    setFundas((prev) => [...prev, ...data]);
     setShowAñadir(false);
     setNuevoTipo("");
     setVariacionesTexto("");
@@ -45,7 +47,7 @@ export const FundasManager = ({ marca, onVolver }) => {
       alert("Error al eliminar funda");
       return;
     }
-    setFundas(prev => prev.filter(f => f.id !== fundaAEliminar.id));
+    setFundas((prev) => prev.filter((f) => f.id !== fundaAEliminar.id));
     setFundaAEliminar(null);
   };
 
@@ -53,128 +55,128 @@ export const FundasManager = ({ marca, onVolver }) => {
     <span
       key={color}
       title={color}
-      style={{
-        display: "inline-block",
-        width: 20,
-        height: 20,
-        borderRadius: "50%",
-        backgroundColor: color.startsWith("#") ? color : "#ccc",
-        border: "1px solid #555",
-        marginRight: 6,
-      }}
-    ></span>
+      className="admin-color-chip"
+      style={{ backgroundColor: color.startsWith("#") ? color : "#ccc" }}
+    />
   );
 
+  const coloresPrevios = variacionesTexto
+    .split(",")
+    .map((v) => v.trim())
+    .filter(Boolean);
+
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <button
-          onClick={onVolver}
-          className="boton-marca"
-          style={{
-            background: "none",
-            border: "none",
-            padding: 0,
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
-          <span style={{ fontSize: "1.5em" }}>←</span>
-          <img
-            src={`/${marca.nombre.toLowerCase()}.png`}
-            alt={marca.nombre}
-            style={{ height: 40, objectFit: "contain" }}
-          />
+    <section className="catalog-view">
+      <div className="screen-toolbar">
+        <button onClick={onVolver} className="btn btn-ghost btn-with-logo">
+          <span className="back-arrow">←</span>
+          <span>Modelos</span>
         </button>
-        <button onClick={() => setShowAñadir(true)} className="boton-marca">
-          ➕ Añadir funda
+
+        <button onClick={() => setShowAñadir(true)} className="btn btn-primary">
+          Nueva funda
         </button>
       </div>
 
-      <h2 className="titulo-marca">Fundas de {marca.nombre}</h2>
-      {loading && <div>Cargando fundas...</div>}
+      <header className="catalog-header">
+        <div>
+          <span className="eyebrow">{marca.nombre}</span>
+          <h2 className="titulo-marca">Fundas</h2>
+        </div>
+        <span className="summary-pill">{fundas.length} fundas</span>
+      </header>
 
-      {!loading &&
-        fundas.map((f) => (
-          <div
-            key={f.id}
-            style={{
-              position: "relative",
-              marginBottom: 8,
-              padding: "6px 10px",
-              background: "#eee",
-              borderRadius: 6,
-            }}
-          >
-            {f.tipo_funda}{" "}
-            {f.variaciones?.length
-              ? f.variaciones.map((color) => renderColorCircle(color))
-              : ""}
-            <button
-              onClick={() => setFundaAEliminar(f)}
-              style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                background: "red",
-                color: "white",
-                border: "none",
-                borderRadius: "50%",
-                width: 24,
-                height: 24,
-                cursor: "pointer",
-              }}
-            >
-              ×
-            </button>
-          </div>
-        ))}
-      {!loading && !fundas.length && <div>No hay fundas.</div>}
+      {loading && (
+        <div className="state-panel">
+          <span className="loader-dot" />
+          Cargando fundas...
+        </div>
+      )}
+
+      {!loading && !fundas.length && (
+        <div className="empty-state">No hay fundas.</div>
+      )}
+
+      {!loading && fundas.length > 0 && (
+        <div className="fundas-admin-list">
+          {fundas.map((f) => (
+            <article key={f.id} className="funda-admin-card">
+              <div>
+                <h3>{f.tipo_funda}</h3>
+                <div className="admin-color-row">
+                  {f.variaciones?.length
+                    ? f.variaciones.map((color) => renderColorCircle(color))
+                    : <span className="muted-text">Sin colores</span>}
+                </div>
+              </div>
+
+              <button
+                onClick={() => setFundaAEliminar(f)}
+                className="btn btn-danger btn-small"
+              >
+                Eliminar
+              </button>
+            </article>
+          ))}
+        </div>
+      )}
 
       {showAñadir && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              padding: 20,
-              borderRadius: 8,
-              width: 400,
-            }}
-          >
-            <h3>Añadir funda</h3>
-            <input
-              type="text"
-              value={nuevoTipo}
-              onChange={(e) => setNuevoTipo(e.target.value)}
-              placeholder="Tipo de funda"
-              style={{ width: "100%", marginBottom: 12, padding: 8 }}
-            />
-            <textarea
-              value={variacionesTexto}
-              onChange={(e) => setVariacionesTexto(e.target.value)}
-              placeholder="Códigos de color separados por coma (ej: #ff0000, #00ff00)"
-              style={{
-                width: "100%",
-                marginBottom: 12,
-                padding: 8,
-                minHeight: 80,
-              }}
-            />
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
-              <button onClick={() => setShowAñadir(false)} className="boton-marca">
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal-card">
+            <div className="modal-header">
+              <div>
+                <span className="eyebrow">{marca.nombre}</span>
+                <h3>Añadir funda</h3>
+              </div>
+              <button
+                onClick={() => setShowAñadir(false)}
+                className="drawer-close"
+                title="Cerrar"
+              >
+                ×
+              </button>
+            </div>
+
+            <label className="form-field">
+              <span>Tipo de funda</span>
+              <input
+                type="text"
+                value={nuevoTipo}
+                onChange={(e) => setNuevoTipo(e.target.value)}
+                placeholder="Ej. Silicona"
+              />
+            </label>
+
+            <label className="form-field">
+              <span>Colores</span>
+              <textarea
+                value={variacionesTexto}
+                onChange={(e) => setVariacionesTexto(e.target.value)}
+                placeholder="Ej. #ff0000, #00ff00"
+              />
+            </label>
+
+            {coloresPrevios.length > 0 && (
+              <div className="color-preview-row">
+                {coloresPrevios.map((color) => (
+                  <span
+                    key={color}
+                    title={color}
+                    style={{ backgroundColor: color.startsWith("#") ? color : "#ccc" }}
+                  />
+                ))}
+              </div>
+            )}
+
+            <div className="modal-actions">
+              <button
+                onClick={() => setShowAñadir(false)}
+                className="btn btn-secondary"
+              >
                 Cancelar
               </button>
-              <button onClick={guardarFunda} className="boton-marca">
+              <button onClick={guardarFunda} className="btn btn-primary">
                 Guardar
               </button>
             </div>
@@ -183,41 +185,24 @@ export const FundasManager = ({ marca, onVolver }) => {
       )}
 
       {fundaAEliminar && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              padding: 20,
-              borderRadius: 8,
-              width: 300,
-            }}
-          >
-            <h3>¿Eliminar funda?</h3>
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal-card modal-card--narrow">
+            <h3>Eliminar funda</h3>
             <p>{fundaAEliminar.tipo_funda}</p>
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
-              <button onClick={() => setFundaAEliminar(null)} className="boton-marca">
+            <div className="modal-actions">
+              <button
+                onClick={() => setFundaAEliminar(null)}
+                className="btn btn-secondary"
+              >
                 Cancelar
               </button>
-              <button
-                onClick={confirmarEliminar}
-                className="boton-marca"
-                style={{ background: "red", color: "white" }}
-              >
+              <button onClick={confirmarEliminar} className="btn btn-danger">
                 Eliminar
               </button>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };

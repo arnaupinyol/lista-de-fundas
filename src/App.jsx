@@ -35,12 +35,15 @@ function App() {
   };
 
   return (
-    <div>
-      <CatalogViewer 
-        marcas={marcas} 
-        onAgregarAlCarrito={handleAgregarAlCarrito}
-      />
-      <CarreteSidebar 
+    <div className="app-shell">
+      <main className="app-content">
+        <CatalogViewer
+          marcas={marcas}
+          loading={loading}
+          onAgregarAlCarrito={handleAgregarAlCarrito}
+        />
+      </main>
+      <CarreteSidebar
         items={carritoItems}
         onEliminarFunda={handleEliminarDelCarrito}
       />

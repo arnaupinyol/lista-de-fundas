@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "prebuild": "chmod +x ./node_modules/.bin/vite",
+    "prebuild": "node -e \"if (process.platform !== 'win32') require('fs').chmodSync('./node_modules/.bin/vite', 0o755)\"",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

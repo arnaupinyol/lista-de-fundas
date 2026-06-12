@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { getModelosPorMarca, deleteModelo } from "../lib/catalogService";
 import { AñadirModelo } from "./AñadirModelo";
-import { FundasManager } from "./FundasManager";   // 👈 nuevo
+import { FundasManager } from "./FundasManager";
 import "./CatalogViewer.css";
 
 export const ModeloSelector = ({ marca, onSelectModelo, onVolver }) => {
@@ -10,10 +10,9 @@ export const ModeloSelector = ({ marca, onSelectModelo, onVolver }) => {
   const [showAñadir, setShowAñadir] = useState(false);
   const [modoEliminar, setModoEliminar] = useState(false);
   const [modeloAEliminar, setModeloAEliminar] = useState(null);
+  const [editarFundas, setEditarFundas] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
 
-  const [editarFundas, setEditarFundas] = useState(false); // 👈 nuevo estado
-
-  // cargar modelos
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -28,11 +27,19 @@ export const ModeloSelector = ({ marca, onSelectModelo, onVolver }) => {
     })();
   }, [marca]);
 
+  const modelosFiltrados = useMemo(() => {
+    const term = busqueda.trim().toLowerCase();
+    if (!term) return modelos;
+    return modelos.filter((modelo) =>
+      modelo.nombre.toLowerCase().includes(term)
+    );
+  }, [modelos, busqueda]);
+
   const confirmarEliminar = async () => {
     if (!modeloAEliminar) return;
     const { error } = await deleteModelo(modeloAEliminar.id);
     if (error) {
-      console.error("❌ Error al eliminar modelo:", error);
+      console.error("Error al eliminar modelo:", error);
       alert("Error eliminando el modelo");
       return;
     }
@@ -40,118 +47,133 @@ export const ModeloSelector = ({ marca, onSelectModelo, onVolver }) => {
     setModeloAEliminar(null);
   };
 
-  // 👇 si está en modo edición de fundas, mostramos esa vista
   if (editarFundas) {
     return (
       <FundasManager
         marca={marca}
-        onVolver={() => setEditarFundas(false)} // volver aquí
+        onVolver={() => setEditarFundas(false)}
       />
     );
   }
 
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <button
-          onClick={onVolver}
-          className="boton-marca"
-          style={{ background: "none", border: "none", padding: 0, display: "flex", alignItems: "center", gap: "8px" }}
-        >
-          <span style={{ fontSize: "1.5em" }}>←</span>
-          <img src="/favicon.png" alt="Inicio" style={{ height: 40, objectFit: "contain" }} />
+    <section className="catalog-view">
+      <div className="screen-toolbar">
+        <button onClick={onVolver} className="btn btn-ghost btn-with-logo">
+          <span className="back-arrow">←</span>
+          <span>Marcas</span>
         </button>
 
-        <button onClick={() => setShowAñadir(true)} className="boton-marca">
-          ➕ 
-        </button>
-
-        <button
-          onClick={() => setModoEliminar((prev) => !prev)}
-          className="boton-marca"
-          style={{ backgroundColor: modoEliminar ? "tomato" : "" }}
-        >
-          {modoEliminar ? "❌" : "🗑️"}
-        </button>
-
-        <button onClick={() => setEditarFundas(true)} className="boton-marca">
-          ✏️
-        </button>
+        <div className="toolbar-actions">
+          <button onClick={() => setShowAñadir(true)} className="btn btn-primary">
+            Nuevo modelo
+          </button>
+          <button
+            onClick={() => setModoEliminar((prev) => !prev)}
+            className={`btn ${modoEliminar ? "btn-danger" : "btn-secondary"}`}
+          >
+            {modoEliminar ? "Cancelar eliminación" : "Eliminar"}
+          </button>
+          <button onClick={() => setEditarFundas(true)} className="btn btn-secondary">
+            Fundas
+          </button>
+        </div>
       </div>
 
-      <h2 className="titulo-marca">Modelos de {marca.nombre}</h2>
-
-      {loading && <div>Cargando...</div>}
-
-      {!loading && modelos.map((modelo) => (
-        <div key={modelo.id} style={{ position: "relative", display: "inline-block" }}>
-          <button
-            onClick={() => !modoEliminar && onSelectModelo(modelo)}
-            className={`boton-modelo${modoEliminar ? " vibrando" : ""}`}
-            style={{ opacity: modoEliminar ? 0.6 : 1 }}
-          >
-            {modelo.nombre}
-          </button>
-          {modoEliminar && (
-            <button
-              onClick={() => setModeloAEliminar(modelo)}
-              style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                background: "red",
-                color: "white",
-                border: "none",
-                borderRadius: "50%",
-                width: 24,
-                height: 24,
-                cursor: "pointer",
-              }}
-            >
-              ×
-            </button>
-          )}
+      <header className="catalog-header">
+        <div>
+          <span className="eyebrow">{marca.nombre}</span>
+          <h2 className="titulo-marca">Modelos</h2>
         </div>
-      ))}
+        <span className="summary-pill">{modelos.length} modelos</span>
+      </header>
 
-      {!loading && !modelos.length && <div>No hay modelos para esta marca.</div>}
+      <div className="control-row">
+        <input
+          className="search-input"
+          type="search"
+          value={busqueda}
+          onChange={(event) => setBusqueda(event.target.value)}
+          placeholder="Buscar modelo"
+        />
+        {modoEliminar && (
+          <span className="mode-chip mode-chip--danger">Modo eliminar activo</span>
+        )}
+      </div>
+
+      {loading && (
+        <div className="state-panel">
+          <span className="loader-dot" />
+          Cargando modelos...
+        </div>
+      )}
+
+      {!loading && modelos.length === 0 && (
+        <div className="empty-state">No hay modelos para esta marca.</div>
+      )}
+
+      {!loading && modelos.length > 0 && modelosFiltrados.length === 0 && (
+        <div className="empty-state">No hay modelos con ese nombre.</div>
+      )}
+
+      {!loading && modelosFiltrados.length > 0 && (
+        <div className="modelo-grid">
+          {modelosFiltrados.map((modelo) => (
+            <article
+              key={modelo.id}
+              className={`modelo-card${modoEliminar ? " modelo-card--delete" : ""}`}
+            >
+              <button
+                onClick={() => onSelectModelo(modelo)}
+                disabled={modoEliminar}
+                className="modelo-card__button"
+              >
+                <span className="modelo-card__name">{modelo.nombre}</span>
+                <span className="modelo-card__meta">Ver fundas</span>
+              </button>
+
+              {modoEliminar && (
+                <button
+                  onClick={() => setModeloAEliminar(modelo)}
+                  className="modelo-delete-button"
+                >
+                  Eliminar
+                </button>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
 
       {showAñadir && (
         <AñadirModelo
           marca={marca}
           onClose={() => setShowAñadir(false)}
-          onModeloAñadido={(nuevoModelo) => setModelos((prev) => [...prev, nuevoModelo])}
+          onModeloAñadido={(nuevoModelo) =>
+            setModelos((prev) => [...prev, nuevoModelo])
+          }
         />
       )}
 
       {modeloAEliminar && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ background: "white", padding: 20, borderRadius: 8, width: 300 }}>
-            <h3>¿Eliminar modelo?</h3>
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal-card modal-card--narrow">
+            <h3>Eliminar modelo</h3>
             <p>{modeloAEliminar.nombre}</p>
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
-              <button onClick={() => setModeloAEliminar(null)} className="boton-marca">
+            <div className="modal-actions">
+              <button
+                onClick={() => setModeloAEliminar(null)}
+                className="btn btn-secondary"
+              >
                 Cancelar
               </button>
-              <button onClick={confirmarEliminar} className="boton-marca" style={{ background: "red", color: "white" }}>
+              <button onClick={confirmarEliminar} className="btn btn-danger">
                 Eliminar
               </button>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };

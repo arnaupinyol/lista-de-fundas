@@ -1,4 +1,3 @@
-// src/components/AñadirModelo.jsx
 import React, { useEffect, useState } from "react";
 import { getFundasPorMarca, addModelo } from "../lib/catalogService";
 import "./CatalogViewer.css";
@@ -8,12 +7,11 @@ export const AñadirModelo = ({ marca, onClose, onModeloAñadido }) => {
   const [fundasMarca, setFundasMarca] = useState([]);
   const [fundasSeleccionadas, setFundasSeleccionadas] = useState([]);
 
-  // cargar fundas de la marca
   useEffect(() => {
     (async () => {
       const { data, error } = await getFundasPorMarca(marca.id);
       if (error) {
-        console.error("❌ Error cargando fundas de marca:", error);
+        console.error("Error cargando fundas de marca:", error);
         setFundasMarca([]);
       } else {
         setFundasMarca(data || []);
@@ -39,66 +37,59 @@ export const AñadirModelo = ({ marca, onClose, onModeloAñadido }) => {
       fundasSeleccionadas
     );
     if (error) {
-      console.error("❌ Error al añadir modelo:", error);
+      console.error("Error al añadir modelo:", error);
       alert("Error al añadir modelo");
       return;
     }
 
-    // Notificamos al padre para actualizar la lista
     onModeloAñadido(data[0]);
     onClose();
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "rgba(0,0,0,0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          background: "white",
-          padding: 20,
-          borderRadius: 8,
-          width: 400,
-        }}
-      >
-        <h3>Añadir modelo a {marca.nombre}</h3>
-        <input
-          type="text"
-          value={nuevoNombre}
-          onChange={(e) => setNuevoNombre(e.target.value)}
-          placeholder="Nombre del modelo"
-          style={{ width: "100%", padding: "8px", marginBottom: "12px" }}
-        />
-
-        <p>Selecciona fundas disponibles:</p>
-        <div style={{ maxHeight: 200, overflowY: "auto", marginBottom: 12 }}>
-          {fundasMarca.map((f) => (
-            <label key={f.id} style={{ display: "block", marginBottom: 6 }}>
-              <input
-                type="checkbox"
-                checked={fundasSeleccionadas.includes(f.tipo_funda)}
-                onChange={() => toggleFunda(f.tipo_funda)}
-              />{" "}
-              {f.tipo_funda}
-            </label>
-          ))}
+    <div className="modal-backdrop" role="dialog" aria-modal="true">
+      <div className="modal-card">
+        <div className="modal-header">
+          <div>
+            <span className="eyebrow">{marca.nombre}</span>
+            <h3>Añadir modelo</h3>
+          </div>
+          <button onClick={onClose} className="drawer-close" title="Cerrar">
+            ×
+          </button>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
-          <button onClick={onClose} className="boton-marca">
+        <label className="form-field">
+          <span>Nombre del modelo</span>
+          <input
+            type="text"
+            value={nuevoNombre}
+            onChange={(e) => setNuevoNombre(e.target.value)}
+            placeholder="Ej. Galaxy A15"
+          />
+        </label>
+
+        <div className="form-field">
+          <span>Fundas disponibles</span>
+          <div className="checkbox-list">
+            {fundasMarca.map((f) => (
+              <label key={f.id} className="checkbox-row">
+                <input
+                  type="checkbox"
+                  checked={fundasSeleccionadas.includes(f.tipo_funda)}
+                  onChange={() => toggleFunda(f.tipo_funda)}
+                />
+                <span>{f.tipo_funda}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="modal-actions">
+          <button onClick={onClose} className="btn btn-secondary">
             Cancelar
           </button>
-          <button onClick={guardarModelo} className="boton-marca">
+          <button onClick={guardarModelo} className="btn btn-primary">
             Guardar
           </button>
         </div>

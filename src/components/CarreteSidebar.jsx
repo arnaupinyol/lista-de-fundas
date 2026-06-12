@@ -1,10 +1,28 @@
-// src/components/CarreteSidebar.jsx
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./CarreteSidebar.css";
 import jsPDF from "jspdf";
 
 export const CarreteSidebar = ({ items, onEliminarFunda }) => {
-  const [minimitzat, setMinimitzat] = useState(true); // Changed to true
+  const [minimitzat, setMinimitzat] = useState(true);
+
+  const itemsAgrupados = useMemo(() => {
+    const map = items.reduce((acc, item) => {
+      const clave = `${item.modelo}-${item.tipo}-${item.estilo || "sin-estilo"}`;
+      if (!acc[clave]) {
+        acc[clave] = { ...item };
+      } else {
+        acc[clave].cantidad += item.cantidad;
+      }
+      return acc;
+    }, {});
+
+    return Object.values(map).reverse();
+  }, [items]);
+
+  const totalFundas = useMemo(
+    () => items.reduce((total, item) => total + item.cantidad, 0),
+    [items]
+  );
 
   const exportarPDF = () => {
     const agrupadoPorModelo = items.reduce((acc, item) => {
@@ -73,74 +91,83 @@ export const CarreteSidebar = ({ items, onEliminarFunda }) => {
   };
 
   return (
-    <div className={`carrete-sidebar ${minimitzat ? "minimitzat" : ""}`}>
-      {/* 🔘 Botó sempre visible */}
+    <>
       <button
         className={`toggle-carrete ${minimitzat ? "plegat" : ""}`}
         onClick={() => setMinimitzat(!minimitzat)}
         title={minimitzat ? "Mostrar carrito" : "Ocultar carrito"}
       >
-        <img
-          src="/carrito.png"
-          alt="carrito"
-          className="icono-carrito"
-        />
+        <img src="/carrito.png" alt="carrito" className="icono-carrito" />
+        {totalFundas > 0 && <span className="cart-badge">{totalFundas}</span>}
       </button>
 
-      {/* Contingut del carrete */}
-      {!minimitzat && (
-        <>
-          <h3>Carrito</h3>
-          {!minimitzat && items.length > 0 && (
-            <button
-              onClick={exportarPDF}
-              className="exportar-btn"
-              style={{
-                background: "var(--color-funda)",
-                border: "none",
-                padding: "8px 16px",
-                borderRadius: "4px",
-                cursor: "pointer",
-                marginBottom: "12px",
-                width: "100%",
-              }}
-            >
-              📄 Exportar a PDF
-            </button>
-          )}
-          {items.length === 0 ? (
-            <p style={{ fontStyle: "italic", color: "#555" }}>Vacío</p>
-          ) : (
-            <ul>
-              {items
-                .slice()
-                .reverse()
-                .map((item, index) => (
-                  <li key={index}>
-                    <div className="funda-info">
-                      {item.estilo && (
-                        <span
-                          className="color-preview"
-                          style={{ backgroundColor: item.estilo, border: "1px solid #000" }}
-                        ></span>
-                      )}
-                      <span>
-                        {item.modelo} – {item.tipo}
-                      </span>
-                      <strong>{item.cantidad}</strong>
-                    </div>
-                    <button
-                      onClick={() => onEliminarFunda(item)}
-                      className="eliminar-btn"
-                    >
-                      ✕
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          )}
-        </>
-      )}
-    </div>
+      <aside
+        className={`carrete-sidebar ${minimitzat ? "minimitzat" : ""}`}
+        aria-hidden={minimitzat}
+      >
+        <div className="carrete-header">
+          <div>
+            <span className="eyebrow">Pedido</span>
+            <h3>Carrito</h3>
+          </div>
+          <button
+            onClick={() => setMinimitzat(true)}
+            className="drawer-close"
+            title="Ocultar carrito"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="carrete-summary">
+          <span>Total</span>
+          <strong>{totalFundas}</strong>
+        </div>
+
+        {itemsAgrupados.length === 0 ? (
+          <div className="cart-empty">Vacío</div>
+        ) : (
+          <ul className="carrete-list">
+            {itemsAgrupados.map((item, index) => (
+              <li key={`${item.modelo}-${item.tipo}-${item.estilo || index}`}>
+                <div className="funda-info">
+                  <span
+                    className="color-preview"
+                    style={{
+                      backgroundColor: item.estilo || "#ffffff",
+                      borderColor: item.estilo ? "rgba(30, 34, 36, 0.35)" : "#d8d1c5",
+                    }}
+                  />
+                  <span className="cart-item-text">
+                    <span className="cart-item-model">{item.modelo}</span>
+                    <span className="cart-item-type">{item.tipo}</span>
+                  </span>
+                </div>
+
+                <div className="cart-item-actions">
+                  <strong>×{item.cantidad}</strong>
+                  <button
+                    onClick={() => onEliminarFunda(item)}
+                    className="eliminar-btn"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="carrete-footer">
+          <button
+            onClick={exportarPDF}
+            className="exportar-btn"
+            disabled={itemsAgrupados.length === 0}
+          >
+            Exportar PDF
+          </button>
+        </div>
+      </aside>
+    </>
   );
 };

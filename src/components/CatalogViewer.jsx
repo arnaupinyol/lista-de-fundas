@@ -5,7 +5,7 @@ import { ModeloSelector } from "./ModeloSelector";
 import { FundaViewer } from "./FundaViewer";
 import "./CatalogViewer.css";
 
-export const CatalogViewer = ({ marcas, onAgregarAlCarrito }) => {
+export const CatalogViewer = ({ marcas, loading, onAgregarAlCarrito }) => {
   const [selectedMarca, setSelectedMarca] = useState(null);
   const [selectedModelo, setSelectedModelo] = useState(null);
 
@@ -22,6 +22,7 @@ export const CatalogViewer = ({ marcas, onAgregarAlCarrito }) => {
     return (
       <MarcaSelector
         marcas={marcas}
+        loading={loading}
         onSelectMarca={setSelectedMarca}
       />
     );
