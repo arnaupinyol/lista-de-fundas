@@ -1,10 +1,41 @@
-import React, { useState } from "react";
-import { addFunda } from "../lib/catalogService";
+import React, { useEffect, useState } from "react";
+import { addFunda, getColoresDisponibles } from "../lib/catalogService";
+import { getColorValue } from "../lib/colorUtils";
 import "./CatalogViewer.css";
 
 export const AñadirFunda = ({ marca, onClose, onFundaAñadida }) => {
   const [tipo, setTipo] = useState("");
-  const [variacionesTexto, setVariacionesTexto] = useState("");
+  const [coloresDisponibles, setColoresDisponibles] = useState([]);
+  const [coloresSeleccionados, setColoresSeleccionados] = useState([]);
+  const [loadingColores, setLoadingColores] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      setLoadingColores(true);
+      const { data, error } = await getColoresDisponibles();
+      if (error) {
+        console.error("Error cargando colores:", error);
+        setColoresDisponibles([]);
+      } else {
+        setColoresDisponibles(data || []);
+      }
+      setLoadingColores(false);
+    })();
+  }, []);
+
+  const seleccionarColor = (event) => {
+    const color = event.target.value;
+    if (!color) return;
+
+    setColoresSeleccionados((prev) =>
+      prev.includes(color) ? prev : [...prev, color]
+    );
+    event.target.value = "";
+  };
+
+  const quitarColor = (color) => {
+    setColoresSeleccionados((prev) => prev.filter((item) => item !== color));
+  };
 
   const guardarFunda = async () => {
     if (!tipo.trim()) {
@@ -12,12 +43,11 @@ export const AñadirFunda = ({ marca, onClose, onFundaAñadida }) => {
       return;
     }
 
-    const variaciones = variacionesTexto
-      .split(",")
-      .map((v) => v.trim())
-      .filter((v) => v.length > 0);
-
-    const { data, error } = await addFunda(marca.id, tipo.trim(), variaciones);
+    const { data, error } = await addFunda(
+      marca.id,
+      tipo.trim(),
+      coloresSeleccionados
+    );
     if (error) {
       console.error("Error añadiendo funda:", error);
       alert("Error al añadir funda");
@@ -28,10 +58,9 @@ export const AñadirFunda = ({ marca, onClose, onFundaAñadida }) => {
     onClose();
   };
 
-  const coloresPrevios = variacionesTexto
-    .split(",")
-    .map((v) => v.trim())
-    .filter(Boolean);
+  const coloresPendientes = coloresDisponibles.filter(
+    (color) => !coloresSeleccionados.includes(color)
+  );
 
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true">
@@ -58,21 +87,45 @@ export const AñadirFunda = ({ marca, onClose, onFundaAñadida }) => {
 
         <label className="form-field">
           <span>Colores</span>
-          <textarea
-            placeholder="Ej. #ff0000, #00ff00, #0000ff"
-            value={variacionesTexto}
-            onChange={(e) => setVariacionesTexto(e.target.value)}
-          />
+          <select
+            className="color-select"
+            onChange={seleccionarColor}
+            defaultValue=""
+            disabled={loadingColores || coloresPendientes.length === 0}
+          >
+            <option value="" disabled>
+              {loadingColores ? "Cargando colores..." : "Seleccionar color"}
+            </option>
+            {coloresPendientes.map((color) => (
+              <option key={color} value={color}>
+                {color}
+              </option>
+            ))}
+          </select>
         </label>
 
-        {coloresPrevios.length > 0 && (
+        {coloresSeleccionados.length > 0 && (
           <div className="color-preview-row">
-            {coloresPrevios.map((color) => (
+            {coloresSeleccionados.map((color) => (
               <span
                 key={color}
                 title={color}
-                style={{ backgroundColor: color.startsWith("#") ? color : "#ccc" }}
-              />
+                className="color-name-pill color-name-pill--removable"
+              >
+                <span
+                  className="color-preview-dot"
+                  style={{ backgroundColor: getColorValue(color) }}
+                />
+                <span>{color}</span>
+                <button
+                  type="button"
+                  onClick={() => quitarColor(color)}
+                  className="color-remove-btn"
+                  title={`Quitar ${color}`}
+                >
+                  ×
+                </button>
+              </span>
             ))}
           </div>
         )}

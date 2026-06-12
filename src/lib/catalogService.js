@@ -182,65 +182,41 @@ export async function getFundasPorMarca(marcaId) {
   return normalizarArrayEnData(response, "variaciones");
 }
 
+// Obtener colores disponibles para seleccionar en nuevas fundas
+export async function getColoresDisponibles() {
+  const coloresResponse = await supabase
+    .from("colores")
+    .select("nombre")
+    .order("nombre", { ascending: true });
+
+  if (coloresResponse.error) return coloresResponse;
+
+  const colores = limpiarLista((coloresResponse.data || []).map((color) => color.nombre));
+
+  if (colores.length > 0) {
+    return { ...coloresResponse, data: colores, error: null };
+  }
+
+  const fundasResponse = await supabase
+    .from("fundas_con_variaciones")
+    .select("variaciones");
+
+  if (fundasResponse.error) return fundasResponse;
+
+  const coloresDesdeVista = limpiarLista(
+    (fundasResponse.data || []).flatMap((funda) => funda.variaciones || [])
+  ).sort((a, b) => a.localeCompare(b));
+
+  return {
+    ...fundasResponse,
+    data: coloresDesdeVista,
+    error: null,
+  };
+}
+
 // Añadir funda
 export async function addFunda(marca_id, tipo_funda, variaciones = []) {
-  const variacionesLimpias = limpiarLista(variaciones);
-  let relacionesVariaciones = [];
-
-  if (variacionesLimpias.length > 0) {
-    const variacionesResponse = await supabase
-      .from("variaciones")
-      .upsert(
-        variacionesLimpias.map((nombre) => ({ nombre })),
-        { onConflict: "nombre", ignoreDuplicates: true }
-      )
-      .select("id, nombre");
-
-    if (variacionesResponse.error) return errorResponse(variacionesResponse.error);
-
-    const variacionIdPorNombre = new Map(
-      (variacionesResponse.data || []).map((variacion) => [
-        variacion.nombre,
-        variacion.id,
-      ])
-    );
-
-    const variacionesNoDevueltas = variacionesLimpias.filter(
-      (nombre) => !variacionIdPorNombre.has(nombre)
-    );
-
-    if (variacionesNoDevueltas.length > 0) {
-      const variacionesIdsResponse = await supabase
-        .from("variaciones")
-        .select("id, nombre")
-        .in("nombre", variacionesNoDevueltas);
-
-      if (variacionesIdsResponse.error) {
-        return errorResponse(variacionesIdsResponse.error);
-      }
-
-      for (const variacion of variacionesIdsResponse.data || []) {
-        variacionIdPorNombre.set(variacion.nombre, variacion.id);
-      }
-    }
-
-    const variacionesSinId = variacionesLimpias.filter(
-      (nombre) => !variacionIdPorNombre.has(nombre)
-    );
-
-    if (variacionesSinId.length > 0) {
-      return errorResponse(
-        createServiceError(
-          `No se han podido resolver variaciones: ${variacionesSinId.join(", ")}`
-        )
-      );
-    }
-
-    relacionesVariaciones = variacionesLimpias.map((nombre, index) => ({
-      variacion_id: variacionIdPorNombre.get(nombre),
-      orden: index + 1,
-    }));
-  }
+  const coloresLimpios = limpiarLista(variaciones);
 
   const fundaResponse = await supabase
     .from("fundas")
@@ -252,21 +228,70 @@ export async function addFunda(marca_id, tipo_funda, variaciones = []) {
 
   const funda = fundaResponse.data;
 
-  if (relacionesVariaciones.length > 0) {
-    const relaciones = relacionesVariaciones.map((relacion) => ({
+  if (coloresLimpios.length > 0) {
+    const coloresResponse = await supabase
+      .from("colores")
+      .upsert(
+        coloresLimpios.map((nombre) => ({ nombre })),
+        { onConflict: "nombre" }
+      )
+      .select("id, nombre");
+
+    if (coloresResponse.error) return errorResponse(coloresResponse.error);
+
+    const colorIdPorNombre = new Map(
+      (coloresResponse.data || []).map((color) => [
+        color.nombre,
+        color.id,
+      ])
+    );
+
+    const coloresNoDevueltos = coloresLimpios.filter(
+      (nombre) => !colorIdPorNombre.has(nombre)
+    );
+
+    if (coloresNoDevueltos.length > 0) {
+      const coloresIdsResponse = await supabase
+        .from("colores")
+        .select("id, nombre")
+        .in("nombre", coloresNoDevueltos);
+
+      if (coloresIdsResponse.error) {
+        return errorResponse(coloresIdsResponse.error);
+      }
+
+      for (const color of coloresIdsResponse.data || []) {
+        colorIdPorNombre.set(color.nombre, color.id);
+      }
+    }
+
+    const coloresSinId = coloresLimpios.filter(
+      (nombre) => !colorIdPorNombre.has(nombre)
+    );
+
+    if (coloresSinId.length > 0) {
+      return errorResponse(
+        createServiceError(
+          `No se han podido resolver colores: ${coloresSinId.join(", ")}`
+        )
+      );
+    }
+
+    const relaciones = coloresLimpios.map((nombre, index) => ({
       funda_id: funda.id,
-      ...relacion,
+      color_id: colorIdPorNombre.get(nombre),
+      orden: index + 1,
     }));
 
     const relacionesResponse = await supabase
-      .from("funda_variaciones")
+      .from("funda_colores")
       .insert(relaciones);
 
     if (relacionesResponse.error) return errorResponse(relacionesResponse.error);
   }
 
   return {
-    data: [{ ...funda, variaciones: variacionesLimpias }],
+    data: [{ ...funda, variaciones: coloresLimpios }],
     error: null,
   };
 }

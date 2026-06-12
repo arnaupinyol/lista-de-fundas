@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import "./CarreteSidebar.css";
 import jsPDF from "jspdf";
+import { getColorRgb, getColorValue } from "../lib/colorUtils";
 
 export const CarreteSidebar = ({ items, onEliminarFunda }) => {
   const [minimitzat, setMinimitzat] = useState(true);
@@ -52,23 +53,22 @@ export const CarreteSidebar = ({ items, onEliminarFunda }) => {
 
         Object.values(fundas).forEach((item) => {
           const estilo = item.estilo || null;
+          const textoItem = estilo
+            ? `${item.tipo} (${estilo}) × ${item.cantidad}`
+            : `${item.tipo} × ${item.cantidad}`;
+          const rgb = estilo ? getColorRgb(estilo) : null;
 
-          if (estilo && /^#([0-9A-F]{3}){1,2}([0-9A-F]{2})?$/i.test(estilo)) {
-            const hex = estilo.replace("#", "");
-            const r = parseInt(hex.substring(0, 2), 16);
-            const g = parseInt(hex.substring(2, 4), 16);
-            const b = parseInt(hex.substring(4, 6), 16);
-
+          if (rgb) {
             doc.setDrawColor(0, 0, 0);
             doc.setLineWidth(0.2);
-            doc.setFillColor(r, g, b);
+            doc.setFillColor(rgb.r, rgb.g, rgb.b);
             doc.rect(30, y - 4, 6, 6, "FD");
 
             doc.setTextColor(0, 0, 0);
-            doc.text(`${item.tipo} × ${item.cantidad}`, 40, y);
+            doc.text(textoItem, 40, y);
           } else {
             doc.setTextColor(0, 0, 0);
-            doc.text(`• ${item.tipo} × ${item.cantidad}`, 30, y);
+            doc.text(`• ${textoItem}`, 30, y);
           }
 
           y += 10;
@@ -134,13 +134,15 @@ export const CarreteSidebar = ({ items, onEliminarFunda }) => {
                   <span
                     className="color-preview"
                     style={{
-                      backgroundColor: item.estilo || "#ffffff",
+                      backgroundColor: getColorValue(item.estilo),
                       borderColor: item.estilo ? "rgba(30, 34, 36, 0.35)" : "#d8d1c5",
                     }}
                   />
                   <span className="cart-item-text">
                     <span className="cart-item-model">{item.modelo}</span>
-                    <span className="cart-item-type">{item.tipo}</span>
+                    <span className="cart-item-type">
+                      {item.estilo ? `${item.tipo} · ${item.estilo}` : item.tipo}
+                    </span>
                   </span>
                 </div>
 

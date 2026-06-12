@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { getFundasPorMarca } from "../lib/catalogService";
+import { getColorValue, isDarkColor } from "../lib/colorUtils";
 import "./CatalogViewer.css";
 
 export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
@@ -77,47 +78,12 @@ export const FundaViewer = ({ marca, modelo, onVolver, onGuardarFunda }) => {
     }));
   };
 
-  const esColorFosc = (color) => {
-    if (!color) return false;
-    const c = color.trim().toLowerCase();
-    if (["#000", "#000000", "black", "rgb(0,0,0)"].includes(c)) return true;
-    if (c.startsWith("#") && c.length === 7) {
-      const r = parseInt(c.slice(1, 3), 16);
-      const g = parseInt(c.slice(3, 5), 16);
-      const b = parseInt(c.slice(5, 7), 16);
-      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-      return lum < 60;
-    }
-    return false;
-  };
-
-  const normalizarColor = (estilo) => {
-    if (!estilo) return "#ffffff";
-    const value = estilo.toLowerCase();
-    const colores = [
-      "black",
-      "white",
-      "red",
-      "blue",
-      "green",
-      "pink",
-      "purple",
-      "gold",
-      "silver",
-      "gray",
-      "transparent",
-    ];
-
-    if (estilo.startsWith("#") || colores.includes(value)) return estilo;
-    return "#d7dce0";
-  };
-
   const renderOpcionFunda = (tipo, estilo = "default") => {
     const k = keyOf(tipo, estilo);
     const cantidad = contadores[k] || 0;
     const sinColor = estilo === "default";
-    const color = sinColor ? "#ffffff" : normalizarColor(estilo);
-    const fosc = esColorFosc(color);
+    const color = sinColor ? "#ffffff" : getColorValue(estilo);
+    const fosc = isDarkColor(color);
 
     return (
       <div key={k} className="color-funda">

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { getFundasPorMarca, addFunda, deleteFunda } from "../lib/catalogService";
+import {
+  getFundasPorMarca,
+  getColoresDisponibles,
+  addFunda,
+  deleteFunda,
+} from "../lib/catalogService";
+import { getColorValue } from "../lib/colorUtils";
 import "./CatalogViewer.css";
 
 export const FundasManager = ({ marca, onVolver }) => {
@@ -7,7 +13,9 @@ export const FundasManager = ({ marca, onVolver }) => {
   const [loading, setLoading] = useState(true);
   const [showAñadir, setShowAñadir] = useState(false);
   const [nuevoTipo, setNuevoTipo] = useState("");
-  const [variacionesTexto, setVariacionesTexto] = useState("");
+  const [coloresDisponibles, setColoresDisponibles] = useState([]);
+  const [coloresSeleccionados, setColoresSeleccionados] = useState([]);
+  const [loadingColores, setLoadingColores] = useState(false);
   const [fundaAEliminar, setFundaAEliminar] = useState(null);
 
   useEffect(() => {
@@ -23,21 +31,55 @@ export const FundasManager = ({ marca, onVolver }) => {
     })();
   }, [marca]);
 
+  useEffect(() => {
+    if (!showAñadir || coloresDisponibles.length > 0) return;
+
+    (async () => {
+      setLoadingColores(true);
+      const { data, error } = await getColoresDisponibles();
+      if (error) {
+        console.error("Error cargando colores:", error);
+        setColoresDisponibles([]);
+      } else {
+        setColoresDisponibles(data || []);
+      }
+      setLoadingColores(false);
+    })();
+  }, [showAñadir, coloresDisponibles.length]);
+
+  const cerrarModalAñadir = () => {
+    setShowAñadir(false);
+    setNuevoTipo("");
+    setColoresSeleccionados([]);
+  };
+
+  const seleccionarColor = (event) => {
+    const color = event.target.value;
+    if (!color) return;
+
+    setColoresSeleccionados((prev) =>
+      prev.includes(color) ? prev : [...prev, color]
+    );
+    event.target.value = "";
+  };
+
+  const quitarColor = (color) => {
+    setColoresSeleccionados((prev) => prev.filter((item) => item !== color));
+  };
+
   const guardarFunda = async () => {
     if (!nuevoTipo.trim()) return;
-    const variaciones = variacionesTexto
-      .split(",")
-      .map((v) => v.trim())
-      .filter(Boolean);
-    const { data, error } = await addFunda(marca.id, nuevoTipo.trim(), variaciones);
+    const { data, error } = await addFunda(
+      marca.id,
+      nuevoTipo.trim(),
+      coloresSeleccionados
+    );
     if (error) {
       alert("Error al añadir funda");
       return;
     }
     setFundas((prev) => [...prev, ...data]);
-    setShowAñadir(false);
-    setNuevoTipo("");
-    setVariacionesTexto("");
+    cerrarModalAñadir();
   };
 
   const confirmarEliminar = async () => {
@@ -52,18 +94,18 @@ export const FundasManager = ({ marca, onVolver }) => {
   };
 
   const renderColorCircle = (color) => (
-    <span
-      key={color}
-      title={color}
-      className="admin-color-chip"
-      style={{ backgroundColor: color.startsWith("#") ? color : "#ccc" }}
-    />
+    <span key={color} title={color} className="color-name-pill">
+      <span
+        className="admin-color-chip"
+        style={{ backgroundColor: getColorValue(color) }}
+      />
+      <span>{color}</span>
+    </span>
   );
 
-  const coloresPrevios = variacionesTexto
-    .split(",")
-    .map((v) => v.trim())
-    .filter(Boolean);
+  const coloresPendientes = coloresDisponibles.filter(
+    (color) => !coloresSeleccionados.includes(color)
+  );
 
   return (
     <section className="catalog-view">
@@ -130,7 +172,7 @@ export const FundasManager = ({ marca, onVolver }) => {
                 <h3>Añadir funda</h3>
               </div>
               <button
-                onClick={() => setShowAñadir(false)}
+                onClick={cerrarModalAñadir}
                 className="drawer-close"
                 title="Cerrar"
               >
@@ -150,28 +192,52 @@ export const FundasManager = ({ marca, onVolver }) => {
 
             <label className="form-field">
               <span>Colores</span>
-              <textarea
-                value={variacionesTexto}
-                onChange={(e) => setVariacionesTexto(e.target.value)}
-                placeholder="Ej. #ff0000, #00ff00"
-              />
+              <select
+                className="color-select"
+                onChange={seleccionarColor}
+                defaultValue=""
+                disabled={loadingColores || coloresPendientes.length === 0}
+              >
+                <option value="" disabled>
+                  {loadingColores ? "Cargando colores..." : "Seleccionar color"}
+                </option>
+                {coloresPendientes.map((color) => (
+                  <option key={color} value={color}>
+                    {color}
+                  </option>
+                ))}
+              </select>
             </label>
 
-            {coloresPrevios.length > 0 && (
+            {coloresSeleccionados.length > 0 && (
               <div className="color-preview-row">
-                {coloresPrevios.map((color) => (
+                {coloresSeleccionados.map((color) => (
                   <span
                     key={color}
                     title={color}
-                    style={{ backgroundColor: color.startsWith("#") ? color : "#ccc" }}
-                  />
+                    className="color-name-pill color-name-pill--removable"
+                  >
+                    <span
+                      className="color-preview-dot"
+                      style={{ backgroundColor: getColorValue(color) }}
+                    />
+                    <span>{color}</span>
+                    <button
+                      type="button"
+                      onClick={() => quitarColor(color)}
+                      className="color-remove-btn"
+                      title={`Quitar ${color}`}
+                    >
+                      ×
+                    </button>
+                  </span>
                 ))}
               </div>
             )}
 
             <div className="modal-actions">
               <button
-                onClick={() => setShowAñadir(false)}
+                onClick={cerrarModalAñadir}
                 className="btn btn-secondary"
               >
                 Cancelar
